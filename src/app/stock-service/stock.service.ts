@@ -25,7 +25,16 @@ export class StockDataService {
     }
 
     getStockDataFromApi(): Promise<any> {
-        var searchString = this.getYqlRequest(this.activeStocks, '2009-09-11', '2010-03-10')
+        let now = new Date()
+        let year = now.getFullYear()
+        let month = now.getMonth() + 1
+        let date = now.getDate()
+
+        var startDate = (year - 1) + '-' + month + '-' + date
+        var endDate = year + '-' + month + '-' + date
+
+        // var searchString = this.getYqlRequest(this.activeStocks, '2009-09-11', '2010-03-10')
+        var searchString = this.getYqlRequest(this.activeStocks, startDate, endDate)
         return this.jsonp.get(searchString)
             .toPromise()
             .then(response => {
