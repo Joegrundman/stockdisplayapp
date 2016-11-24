@@ -1,0 +1,7 @@
+.chart-display {
+    border: 1px solid black;
+}
+
+#chart-svg {
+    border: 1px solid cyan;
+}

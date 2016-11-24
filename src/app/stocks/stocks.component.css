@@ -1,0 +1,15 @@
+.stockholder {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid orange;
+    border-radius: 5px;
+}
+
+.selected {
+    background-color: #CFD8DC !important;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
