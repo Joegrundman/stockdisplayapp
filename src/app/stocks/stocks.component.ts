@@ -6,14 +6,14 @@ import {StockDataService} from '..//stock-service/stock.service'
     selector: 'stocks-component',
     template: `
     <div class="stockholder">Stocks component
-        <ul class="stocktabs">
-        <li *ngFor="let st of activeStocks"
-            [class.selected]="st === selectedStock"
-            (click)="onSelect(st)">{{st}}   
-            <button [class.hidden]="st !== selectedStock"
-            (click)="onDelete(st)">X</button>     
-        </li>
-        </ul>
+        <div class="stocktabs">
+            <div class="stocktab" *ngFor="let st of activeStocks"
+                [class.selected]="st === selectedStock"
+                (click)="onSelect(st)">{{st}}   
+                <button class="stockdelbtn" [class.hidden]="st !== selectedStock"
+                (click)="onDelete(st)">X</button>     
+            </div>
+        </div>
     </div>`,
     styleUrls: ['./stocks.component.css']
 
