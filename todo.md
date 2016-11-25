@@ -1,12 +1,13 @@
 ## Stock Display Todo Lst
 
 **Current Active Todo**
-Solve problem of AAPL not updating - it's showing but off screen because scale isn't changing
+
+style searchbar
 
 # YQL api
 - [x] use yql to generate different stock data sets
 - [ ] problem with getting more than two data sets to be solved
-- [ ] use yql to generate different start and end dates
+- [] use yql to generate different start and end dates
 
 # Chart
 - [x] Needs to rerender all graphs and axes on update
