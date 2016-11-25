@@ -15,6 +15,8 @@ export class StockDataService {
     private getYqlRequest(terms: Array<string>, startDate: string, endDate: string): string {
         // wrap the search terms with double quotes and join with comma
         let searchTerms = terms.map(t => '%22' + t + '%22').join('%2C')
+        console.log("Searchterms", searchTerms,)
+        console.log("decoded", decodeURIComponent(searchTerms))
         let yqlRequest = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata' +
                     '%20where%20symbol%20in%20%28' + searchTerms +
                     '%29%20and%20startDate%20%3D%20%22' + startDate + 

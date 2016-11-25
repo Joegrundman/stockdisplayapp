@@ -8,7 +8,7 @@ import { StockDataService } from '../stock-service/stock.service'
     <div class="searchbar"> 
     Enter the stock symbol here:  
     <input class="searchbar-input" name="stock-code-value" value="" placeholder="stock symbol">
-    <button class="searchbar-button" (click)="onClick()">go!</button>
+    <button class="searchbar-button" (click)="onClick()">GO!</button>
     </div>
     `,
     styleUrls: [ './searchbar.component.css' ]
