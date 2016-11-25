@@ -1,0 +1,36 @@
+.searchbar {
+    margin: 1em;
+}
+
+.searchbar-input {
+    width: 12em;
+    height: 2em;
+    border-radius: 3px;
+    border: 1px solid #666;
+    font-size: 1em;
+    text-transform: uppercase;
+    margin-left: 1em;
+    padding-left: 1em;
+}
+
+.searchbar-input:hover {
+    box-shadow: inset 0 0 3px rgba(0,0,255, 0.2);
+}
+
+.searchbar-button {
+    width: 12em;
+    height: 2.2em;
+    border-radius: 3px;
+    border: 1px solid #666;
+    font-size: 1em;
+    margin-left: 1em;
+    background-color: #f3f3f3;
+    color: #666;
+    cursor: pointer; 
+}
+
+.searchbar-button:hover {
+    background-color: #eee;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+}
+
