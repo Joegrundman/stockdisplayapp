@@ -1,13 +1,13 @@
 h1 {
-  color: #369;
-  margin-top: 1em; 
+  color: steelblue;
+  margin-top: 0.5em; 
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   font-size: 250%;
 }
 
 h2, h3 {
-  color: #444;
+  color: #666;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: lighter;
   text-align: center;

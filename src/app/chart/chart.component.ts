@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import * as d3 from 'd3'
+
+
 import {StockDataService} from '../stock-service/stock.service'
 
 enum Margin {
@@ -27,6 +29,7 @@ export class ChartComponent implements OnInit {
     private volumes: Array<Number>
     private highs: Array<Number>
     private chart: any
+    private overlay: any
     private valueLine: any
     private xRange: any
     private yRange: any
@@ -42,6 +45,13 @@ export class ChartComponent implements OnInit {
 
     getStockData(): void {
         this.stockDataService.getStockDataFromApi().then(stockData => {
+            // handle empty stock list
+            // if(!stockData.length) {
+            //     this.separatedStockData = []
+            //     this.localActiveStockSymbols = this.getActiveStocks().slice()
+            //     this.renderGraph()
+            // }
+
             let parseTime = d3.timeParse("%Y-%m-%d")
             this.stockData = stockData.map(d => {
                 d.Date = parseTime(d.Date)
@@ -67,9 +77,16 @@ export class ChartComponent implements OnInit {
                  .attr("width", this.width.toString() + 'px')
                  .attr("height", this.height.toString() + 'px')
                  .style('background', '#fafafa')
+
     }
 
     renderGraph() {
+
+        // const bisectDate = d3.bisector(d => d["Date"]).left
+        // const mouseMove = () => {
+        //     var x0 = x0.invert(d3.mouse(this) [0])
+        //     var i = bisectDate(data)
+        // }
         // remove old svg child components
         d3.selectAll("svg > *").remove()
 
@@ -116,6 +133,18 @@ export class ChartComponent implements OnInit {
             .attr("transform", "translate(0, " + (this.height - Margin.Bottom )+ ")")
             .style("stroke", "#666")
             .call(d3.axisBottom(this.xRange))
+        
+
+            //add overlay for mouseover
+        // this.overlay = this.chart.append("rect")
+        //         .attr("class", "overlay")
+        //         .attr("width", this.width.toString() + "px")
+        //         .height("height", this.height.toString() + "px")
+        //         .on("mouseover", () => {})
+        //         .on("mouseout", () => {})
+        //         .on("mousemove", () => {})
+
+
     }
 
     setStockWatcher () {
@@ -132,12 +161,13 @@ export class ChartComponent implements OnInit {
                 this.selectedStock = curSelectedStock
                 this.renderGraph()
             }
-        }, 100)
+        }, 300)
     }
 
     ngOnInit(): void {
         this.initGraph()
-        this.stockDataService.addActiveStock('GOOG')
+        this.stockDataService.addActiveStock('YHOO')
+        this.stockDataService.addActiveStock('MSFT')
         this.getStockData()
         this.setStockWatcher()
     }

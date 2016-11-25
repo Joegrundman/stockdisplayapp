@@ -5,13 +5,13 @@ import {StockDataService} from '..//stock-service/stock.service'
 @Component({
     selector: 'stocks-component',
     template: `
-    <div class="stockholder">Stocks component
+    <div class="stockholder">
         <div class="stocktabs">
             <div class="stocktab" *ngFor="let st of activeStocks"
                 [class.selected]="st === selectedStock"
-                (click)="onSelect(st)">{{st}}   
-                <button class="stockdelbtn" [class.hidden]="st !== selectedStock"
-                (click)="onDelete(st)">X</button>     
+                (click)="onSelect(st)"><span>{{st}}</span>   
+                <div class="stockdelbtn" [class.hidden]="st !== selectedStock"
+                (click)="onDelete(st)">Remove</div>     
             </div>
         </div>
     </div>`,
