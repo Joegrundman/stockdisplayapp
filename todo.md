@@ -1,6 +1,7 @@
 ## Stock Display Todo Lst
 
 **Current Active Todo**
+color code on different stocks
 
 # YQL api
 - [x] use yql to generate different stock data sets
@@ -13,6 +14,7 @@
 - [ ] use angular2 system get data from service instead of the watcher i implemented
 - [ ] needs to handle no dataset
 - [ ] mouseover should show data on this date for all stocks
+- [ ] selected stock should have highlight instead of orange
 
 # Searchbar
 - [x] searchbar to send requested stock in uppercase to api
