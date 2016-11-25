@@ -5,12 +5,13 @@ import { StockDataService } from '../stock-service/stock.service'
 @Component({
     selector: 'searchbar-component',
     template: `
-    <div> 
-    Searchbar 
-    <input name="stock-code-value" value="" placeholder="stock code">
-    <button (click)="onClick()">get stock data</button>
+    <div class="searchbar"> 
+    Enter the stock symbol here:  
+    <input class="searchbar-input" name="stock-code-value" value="" placeholder="stock code">
+    <button class="searchbar-button" (click)="onClick()">get stock data</button>
     </div>
-    `
+    `,
+    styleUrls: [ './searchbar.component.css' ]
 })
 
 export class SearchbarComponent {
