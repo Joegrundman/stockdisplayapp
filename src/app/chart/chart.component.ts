@@ -60,13 +60,13 @@ export class ChartComponent implements OnInit {
 
     initGraph() {
 
-        this.width = 1260 - Margin.Left - Margin.Right
+        this.width = 1460 - Margin.Left - Margin.Right
         this.height = 500 - Margin.Top - Margin.Bottom
 
         this.chart = d3.select('svg')
                  .attr("width", this.width.toString() + 'px')
                  .attr("height", this.height.toString() + 'px')
-                 .style('background', '#eee')
+                 .style('background', '#fafafa')
     }
 
     renderGraph() {
@@ -98,10 +98,10 @@ export class ChartComponent implements OnInit {
         this.chart.append("g")
                 .attr("class", "axis axis--y")
                 .attr("transform", "translate(" + (Margin.Left - 2) + ", 0)")
-                .style("stroke", "black")
+                .style("stroke", "#666")
                 .call(d3.axisLeft(this.yRange))
             .append("text")
-                .attr("fill", "black")
+                .attr("fill", "#666")
                 .attr("transform", "rotate(-90)")
                 .attr("y", -Margin.Left / 2) // shifts x axis!?
                 .attr("x", -this.height / 2) //shifts y axis!?
@@ -114,7 +114,7 @@ export class ChartComponent implements OnInit {
         this.chart.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0, " + (this.height - Margin.Bottom )+ ")")
-            .style("stroke", "black")
+            .style("stroke", "#666")
             .call(d3.axisBottom(this.xRange))
     }
 
@@ -132,12 +132,12 @@ export class ChartComponent implements OnInit {
                 this.selectedStock = curSelectedStock
                 this.renderGraph()
             }
-        }, 2000)
+        }, 100)
     }
 
     ngOnInit(): void {
         this.initGraph()
-        this.stockDataService.addActiveStock('YHOO')
+        this.stockDataService.addActiveStock('GOOG')
         this.getStockData()
         this.setStockWatcher()
     }
