@@ -23,19 +23,33 @@ enum Margin {
 
 export class ChartComponent implements OnInit {
     private stockData: Array<any>
+    private dataString: string
     private separatedStockData: Array<any>
     private selectedStock: string 
     private timestamps: Array<Date>
     private volumes: Array<Number>
     private highs: Array<Number>
     private chart: any
+    private colors: Array<string> = ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
+    private stockColor: Object = {}
     private overlay: any
+    private vertical: any
     private valueLine: any
     private xRange: any
     private yRange: any
-    private width: any
-    private height: any
+    private width: number
+    private height: number
     private localActiveStockSymbols: Array<string>
+    private mousex: number
+    // private	hoverContainer
+    // private hoverLine
+    // private hoverLineXOffset
+    // private hoverLineYOffset
+    // private hoverLineGroup
+    // private mouseX: any
+    // private mouseY: any
+    // private currentUserPositionX
+    // private userCurrentlyInteracting: boolean
 
     constructor(private stockDataService: StockDataService){}
 
@@ -45,22 +59,23 @@ export class ChartComponent implements OnInit {
 
     getStockData(): void {
         this.stockDataService.getStockDataFromApi().then(stockData => {
-            // handle empty stock list
-            // if(!stockData.length) {
-            //     this.separatedStockData = []
-            //     this.localActiveStockSymbols = this.getActiveStocks().slice()
-            //     this.renderGraph()
-            // }
 
             let parseTime = d3.timeParse("%Y-%m-%d")
             this.stockData = stockData.map(d => {
                 d.Date = parseTime(d.Date)
+                delete d.Open
+                delete d.High
+                delete d.Low
+                delete d.Volume
+                delete d.Adj_Close
                 return d
             })
+            this.dataString = JSON.stringify(this.stockData)
             this.separatedStockData = []
             this.localActiveStockSymbols = this.getActiveStocks().slice()
 
-            this.localActiveStockSymbols.forEach(stockName => {
+            this.localActiveStockSymbols.forEach((stockName, i) => {
+                this.stockColor[stockName] = this.colors[i]
                 this.separatedStockData.push(this.stockData.filter(element => element.Symbol === stockName))
             })
             console.log("the number of different stock data sets is", this.separatedStockData.length)
@@ -74,6 +89,7 @@ export class ChartComponent implements OnInit {
         this.height = 500 - Margin.Top - Margin.Bottom
 
         this.chart = d3.select('svg')
+                 .attr("class", "chart")
                  .attr("width", this.width.toString() + 'px')
                  .attr("height", this.height.toString() + 'px')
                  .style('background', '#fafafa')
@@ -82,12 +98,6 @@ export class ChartComponent implements OnInit {
 
     renderGraph() {
 
-        // const bisectDate = d3.bisector(d => d["Date"]).left
-        // const mouseMove = () => {
-        //     var x0 = x0.invert(d3.mouse(this) [0])
-        //     var i = bisectDate(data)
-        // }
-        // remove old svg child components
         d3.selectAll("svg > *").remove()
 
         this.xRange = d3.scaleTime()
@@ -96,8 +106,8 @@ export class ChartComponent implements OnInit {
 
         this.yRange = d3.scaleLinear()
             .range([this.height - Margin.Bottom, Margin.Top])
-            .domain(d3.extent(this.stockData, d => d.Close))
-    
+            .domain([0, d3.max(this.stockData, d => +d.Close)])
+
         this.valueLine = d3.line()
             .x(d => this.xRange(d['Date']))
             .y(d => this.yRange(d['Close']))
@@ -107,8 +117,8 @@ export class ChartComponent implements OnInit {
             .datum(individualStockDataSet)
             .attr("class", "line")
             .style("fill", "none")
-            .style("stroke", d => d[0].Symbol == this.selectedStock ? "orange": "steelblue")
-            .style("stroke-width", "1.5px")
+            .style("stroke", d => this.stockColor[d[0].Symbol])
+            .style("stroke-width", d => d[0].Symbol == this.selectedStock ? "3px" : "1.5px")
             .attr("d", this.valueLine)
         })
 
@@ -132,20 +142,44 @@ export class ChartComponent implements OnInit {
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0, " + (this.height - Margin.Bottom )+ ")")
             .style("stroke", "#666")
-            .call(d3.axisBottom(this.xRange))
-        
+            .call(d3.axisBottom(this.xRange)) 
 
-            //add overlay for mouseover
-        // this.overlay = this.chart.append("rect")
-        //         .attr("class", "overlay")
-        //         .attr("width", this.width.toString() + "px")
-        //         .height("height", this.height.toString() + "px")
-        //         .on("mouseover", () => {})
-        //         .on("mouseout", () => {})
-        //         .on("mousemove", () => {})
+        this.overlay = this.chart.append("rect")
+            .attr("class", "overlay")
+            .attr("width", this.width - Margin.Left - Margin.Right + 'px')
+            .attr("height", this.height - Margin.Top - Margin.Bottom + 'px')
+            .attr("y", Margin.Top)
+            .attr("x", Margin.Left)
+            .style("opacity", 0.1)
 
+       this.vertical = d3.select('.chart').append("line")
+                .attr("class", "line")
+                .style("stroke", "red")
+                .style("stroke-width", "1px")
+                .attr("x1", 10)
+                .attr("y1", Margin.Top)
+                .attr("x2", 10)
+                .attr("y2", this.height - Margin.Bottom)                
+                .style("opacity", 0)
 
+            this.overlay.on("mouseover", () => {
+                this.mousex = d3.mouse(d3.event.currentTarget)[0]
+                this.vertical.attr("x1", this.mousex + "px")
+                    .attr("x2", this.mousex + "px")
+                    .style("opacity", 0.5)
+            })
+            .on("mousemove", () => {
+                this.mousex = d3.mouse(d3.event.currentTarget)[0]
+                this.vertical.attr("x1", this.mousex + "px")
+                    .attr("x2", this.mousex + "px")
+                    .style("opacity", 0.5)
+            })
+            .on("mouseout", () => {
+                // this.vertical.style("opacity", 0)
+            })
     }
+
+
 
     setStockWatcher () {
         const stockWatch = setInterval(() => {
