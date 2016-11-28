@@ -7,11 +7,11 @@ import {StockDataService} from '..//stock-service/stock.service'
     template: `
     <div class="stockholder">
         <div class="stocktabs">
-            <div class="stocktab" *ngFor="let st of activeStocks"
-                [class.selected]="st === selectedStock"
-                (click)="onSelect(st)"><span>{{st}}</span>   
-                <div class="stockdelbtn" [class.hidden]="st !== selectedStock"
-                (click)="onDelete(st)">Remove</div>     
+            <div class="stocktab" *ngFor="let stk of activeStocks; let i = index"
+                [class.selected]="stk === selectedStock"
+                (click)="onSelect(stk)"><span [style.color]="colors[i]">{{stk}}</span>   
+                <div class="stockdelbtn" [class.hidden]="stk !== selectedStock"
+                (click)="onDelete(stk)">Remove</div>     
             </div>
         </div>
     </div>`,
@@ -20,8 +20,10 @@ import {StockDataService} from '..//stock-service/stock.service'
 })
 
 export class StocksComponent {
-    constructor( private stockDataService: StockDataService){}
+
+    constructor(private stockDataService: StockDataService){}
     private activeStocks: Array<string> = this.stockDataService.getActiveStocks()
+    private colors: Array<string> = this.stockDataService.getColors()
     private selectedStock: string
 
     onSelect(st: string): void {

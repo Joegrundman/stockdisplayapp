@@ -7,6 +7,7 @@ export class StockDataService {
 
     private activeStocks: Array<string> = []
     private selectedStock: string = ''
+    private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
 
     constructor(private http: Http, private jsonp: Jsonp) { }
 
@@ -32,7 +33,8 @@ export class StockDataService {
         let month = now.getMonth() + 1
         let date = now.getDate()
 
-        var startDate = (year - 1) + '-' + month + '-' + date
+        var startDate = (year - 1) + '-' + (month) + '-' + date
+        // var startDate = (year) + '-' + (month - 2) + '-' + date
         var endDate = year + '-' + month + '-' + date
 
         // var searchString = this.getYqlRequest(this.activeStocks, '2009-09-11', '2010-03-10')
@@ -71,6 +73,10 @@ export class StockDataService {
 
     getSelectedStock(): string {
         return this.selectedStock
+    }
+
+    getColors(): Array<string> {
+        return this.colors
     }
 
     setSelectedStock(target: string): void {
