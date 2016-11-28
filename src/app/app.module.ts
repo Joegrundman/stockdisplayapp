@@ -5,7 +5,7 @@ import { HttpModule, JsonpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { ChartComponent } from './chart/chart.component'
-import { StocksComponent } from './stocks/stocks.component'
+import { StocktabsComponent } from './stocktabs/stocktabs.component'
 import { SearchbarComponent } from './searchbar/searchbar.component'
 import { StockDataService } from './stock-service/stock.service'
 
@@ -14,7 +14,7 @@ import { StockDataService } from './stock-service/stock.service'
     AppComponent,
     ChartComponent,
     SearchbarComponent,
-    StocksComponent
+    StocktabsComponent
   ],
   imports: [
     BrowserModule,

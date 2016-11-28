@@ -3,7 +3,7 @@ import {StockDataService} from '..//stock-service/stock.service'
 // import { StockComponent } from '../stock/stock.component'
 
 @Component({
-    selector: 'stocks-component',
+    selector: 'stocktabs-component',
     template: `
     <div class="stockholder">
         <div class="stocktabs">
@@ -15,11 +15,11 @@ import {StockDataService} from '..//stock-service/stock.service'
             </div>
         </div>
     </div>`,
-    styleUrls: ['./stocks.component.css']
+    styleUrls: ['./stocktabs.component.css']
 
 })
 
-export class StocksComponent {
+export class StocktabsComponent {
 
     constructor(private stockDataService: StockDataService){}
     private activeStocks: Array<string> = this.stockDataService.getActiveStocks()

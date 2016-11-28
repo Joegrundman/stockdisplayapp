@@ -2,6 +2,8 @@
 
 **Current Active Todo**
 
+tooltip on mouse
+
 # YQL api
 - [x] use yql to generate different stock data sets 
 - [ ] error handling for failure to get stock data
@@ -16,6 +18,7 @@
 - [x] line on chart at mouse
 - [ ] mouseover should show data on this date for all stocks
 - [ ] selected stock should have highlight instead of orange
+- [ ] tooltip at mousepoint
 
 # Searchbar
 - [x] searchbar to send requested stock in uppercase to api
