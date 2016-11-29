@@ -1,6 +1,6 @@
 import {Component} from '@angular/core'
 
-import { StockDataService } from '../stock-service/stock.service'
+import { StockDataService } from './stock.service'
 
 @Component({
     selector: 'searchbar-component',

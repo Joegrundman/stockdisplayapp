@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
-import {StockDataService} from '..//stock-service/stock.service'
-// import { StockComponent } from '../stock/stock.component'
+import {StockDataService} from './stock.service'
+// import { StockComponent } from './stock.component'
 
 @Component({
     selector: 'stocktabs-component',

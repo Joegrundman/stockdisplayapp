@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { ChartComponent } from './chart/chart.component'
-import { StocktabsComponent } from './stocktabs/stocktabs.component'
-import { SearchbarComponent } from './searchbar/searchbar.component'
-import { StockDataService } from './stock-service/stock.service'
+import { ChartComponent } from './chart.component'
+import { StocktabsComponent } from './stocktabs.component'
+import { SearchbarComponent } from './searchbar.component'
+import { StockDataService } from './stock.service'
 
 @NgModule({
   declarations: [

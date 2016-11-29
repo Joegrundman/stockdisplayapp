@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import * as d3 from 'd3'
+import * as d3Tip from 'd3-tip'
 
 
 
-import {StockDataService} from '../stock-service/stock.service'
+import {StockDataService} from './stock.service'
 
 enum Margin {
     Top = 40,
@@ -42,15 +43,6 @@ export class ChartComponent implements OnInit {
     private height: number
     private localActiveStockSymbols: Array<string>
     private mousex: number
-    // private	hoverContainer
-    // private hoverLine
-    // private hoverLineXOffset
-    // private hoverLineYOffset
-    // private hoverLineGroup
-    // private mouseX: any
-    // private mouseY: any
-    // private currentUserPositionX
-    // private userCurrentlyInteracting: boolean
 
     constructor(private stockDataService: StockDataService){}
 
@@ -163,7 +155,9 @@ export class ChartComponent implements OnInit {
                 .attr("y2", this.height - Margin.Bottom)                
                 .style("opacity", 0)
 
-            this.overlay.on("mouseover", () => {
+     
+
+        this.overlay.on("mouseover", () => {
                 this.mousex = d3.mouse(d3.event.currentTarget)[0]
                 this.vertical.attr("x1", this.mousex + "px")
                     .attr("x2", this.mousex + "px")
