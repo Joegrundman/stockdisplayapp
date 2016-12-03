@@ -1,6 +1,5 @@
 import { Component } from '@angular/core'
 import {StockDataService} from './stock.service'
-// import { StockComponent } from './stock.component'
 
 @Component({
     selector: 'stocktabs-component',
@@ -10,8 +9,7 @@ import {StockDataService} from './stock.service'
             <div class="stocktab" *ngFor="let stk of activeStocks; let i = index"
                 [class.selected]="stk === selectedStock"
                 (click)="onSelect(stk)"><span [style.color]="colors[i]">{{stk}}</span>   
-                <div class="stockdelbtn" [class.hidden]="stk !== selectedStock"
-                (click)="onDelete(stk)">Remove</div>     
+                <div class="stockdelbtn"  (click)="onDelete(stk)">x</div>     
             </div>
         </div>
     </div>`,
@@ -32,7 +30,6 @@ export class StocktabsComponent {
     }
 
     onDelete(st: string): void {
-        console.log('deleting', st)
         this.stockDataService.deleteActiveStock(st)
         this.selectedStock = null
         this.activeStocks = this.stockDataService.getActiveStocks()
