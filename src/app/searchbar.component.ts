@@ -17,6 +17,7 @@ import { StockDataService } from './stock.service'
 export class SearchbarComponent {
 
     constructor(private stockDataService: StockDataService) { }
+    
 
     onClick () {
         var scv = document.querySelector('input[name=stock-code-value]')
