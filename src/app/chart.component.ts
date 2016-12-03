@@ -210,34 +210,29 @@ export class ChartComponent implements OnInit {
             .on("mousemove", () => {
                 if (this.getMouseActiveOnChart()) {
 
-                    // TODO: refactor
-
                     [this.mousex, this.mousey] = d3.mouse(d3.event.currentTarget)
 
                     var x0 = this.xRange.invert(this.mousex)
+
                     var dateText = x0.getDate() + "/" + (x0.getMonth() + 1) + "/" + x0.getFullYear() + "\n"
-
-                    var stockDataText = []
-                    this.separatedStockData.forEach(dataSet => {
-                        var datum = this.getDataForDate(dataSet, x0)
-                        var stockEntry = datum.Symbol + ': ' + (+datum.Close).toFixed(2) + '$'
-                        stockDataText.push(stockEntry)
-                    })
-
-                    //update vertical line position
-                    this.vertical.attr("x1", this.mousex + 10 + "px")
-                                 .attr("x2", this.mousex + 10 + "px")
-
-                    // update tooltip
-                    this.tooltip.attr("transform", `translate(${this.mousex + 15},${this.mousey - 40})`)
-                    
+                    //update tooltip date
                     this.tooltip.select('.tooltip-text.date')
                             .text(dateText)
 
-                    this.localActiveStockSymbols.forEach((l, i) => {
-                        this.tooltip.select('.tooltip-text.' + l)
-                                .text(stockDataText[i]) 
+                    //update tooltip stock prices
+                    this.separatedStockData.forEach(dataSet => {
+                        var datum = this.getDataForDate(dataSet, x0)
+                        var stockEntry = datum.Symbol + ': ' + (+datum.Close).toFixed(2) + '$'
+                        this.tooltip.select('.tooltip-text.' + datum.Symbol)
+                                .text(stockEntry) 
+
                     })
+                     // update tooltip position
+                    this.tooltip.attr("transform", `translate(${this.mousex + 10},${this.mousey - 40})`)
+                    
+                    //update vertical line position
+                    this.vertical.attr("x1", this.mousex + 5 + "px")
+                                 .attr("x2", this.mousex + 5 + "px")
                 }
             })
             .on("mouseout", () => {
