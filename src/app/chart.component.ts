@@ -1,20 +1,19 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ViewEncapsulation } from '@angular/core'
 import * as d3 from 'd3'
-import * as d3Tip from 'd3-tip'
-
-
 
 import {StockDataService} from './stock.service'
+
 
 enum Margin {
     Top = 40,
     Bottom = 60,
     Left = 100,
-    Right = 40
+    Right = 80
 }
 
 @Component({
     selector: 'chart-component',
+    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="chart-display">
             <svg id="chart-svg"></svg>
@@ -24,9 +23,12 @@ enum Margin {
 })
 
 export class ChartComponent implements OnInit {
+    private bisectDate:any
+    private mouseActiveOnChart: boolean 
     private stockData: Array<any>
     private dataString: string
     private separatedStockData: Array<any>
+    private tooltipData: Array<any>
     private selectedStock: string 
     private timestamps: Array<Date>
     private volumes: Array<Number>
@@ -41,8 +43,10 @@ export class ChartComponent implements OnInit {
     private yRange: any
     private width: number
     private height: number
+    private tooltip: any
     private localActiveStockSymbols: Array<string>
     private mousex: number
+    private mousey: number
 
     constructor(private stockDataService: StockDataService){}
 
@@ -63,6 +67,7 @@ export class ChartComponent implements OnInit {
                 delete d.Adj_Close
                 return d
             })
+
             this.dataString = JSON.stringify(this.stockData)
             this.separatedStockData = []
             this.localActiveStockSymbols = this.getActiveStocks().slice()
@@ -71,9 +76,22 @@ export class ChartComponent implements OnInit {
                 this.stockColor[stockName] = this.colors[i]
                 this.separatedStockData.push(this.stockData.filter(element => element.Symbol === stockName))
             })
+
             console.log("the number of different stock data sets is", this.separatedStockData.length)
             this.renderGraph()
         })
+    }
+
+    getDataForDate(dataSet, x0) {
+        var x0Object = new Date(x0)
+
+        for(var i = dataSet.length - 1; i >= 0; i--) {
+            var date = new Date(dataSet[i]['Date'])
+            if (date > x0Object) {
+                return dataSet[i + 1] || dataSet[i]
+            }
+        }
+        return
     }
 
     initGraph() {
@@ -86,6 +104,8 @@ export class ChartComponent implements OnInit {
                  .attr("width", this.width.toString() + 'px')
                  .attr("height", this.height.toString() + 'px')
                  .style('background', '#fafafa')
+
+        this.bisectDate = d3.bisector(d => d['Date']).left
 
     }
 
@@ -137,13 +157,39 @@ export class ChartComponent implements OnInit {
             .style("stroke", "#666")
             .call(d3.axisBottom(this.xRange)) 
 
+        this.tooltip = this.chart.append("g")
+            .attr("transform", "translate(100, 100)")
+            .style("opacity", 0)
+        this.tooltip.append("rect")
+            .attr("class", "tooltip-rect")
+            .attr("width", '70px')
+            .attr("height",  '100px')
+            .attr("ry", '10')
+            .attr("rx", '10')
+
+        var tooltipText = this.tooltip.append("text")
+            .attr('class', 'tooltip-text date')
+            .attr("y", 15)
+            .attr("x", 5)
+            .text("date")
+
+        this.localActiveStockSymbols.forEach((l, i) => {
+            this.tooltip.append("text")
+                .attr('class', 'tooltip-text ' + l)
+                .attr("y", (15 * (i + 1)) + 15)
+                .attr("x", 3)
+                .text(l)
+        })
+
+
+
         this.overlay = this.chart.append("rect")
             .attr("class", "overlay")
             .attr("width", this.width - Margin.Left - Margin.Right + 'px')
             .attr("height", this.height - Margin.Top - Margin.Bottom + 'px')
             .attr("y", Margin.Top)
             .attr("x", Margin.Left)
-            .style("opacity", 0.1)
+            .style("opacity", 0)
 
        this.vertical = d3.select('.chart').append("line")
                 .attr("class", "line")
@@ -155,28 +201,58 @@ export class ChartComponent implements OnInit {
                 .attr("y2", this.height - Margin.Bottom)                
                 .style("opacity", 0)
 
-     
-
-        this.overlay.on("mouseover", () => {
-                this.mousex = d3.mouse(d3.event.currentTarget)[0]
-                this.vertical.attr("x1", this.mousex + "px")
-                    .attr("x2", this.mousex + "px")
-                    .style("opacity", 0.5)
+        this.overlay.on("mouseover", (d) => {
+                if (this.getMouseActiveOnChart()) {
+                    this.vertical.style("opacity", 0.5)
+                    this.tooltip.style("opacity", 0.7)
+                }
             })
             .on("mousemove", () => {
-                this.mousex = d3.mouse(d3.event.currentTarget)[0]
-                this.vertical.attr("x1", this.mousex + "px")
-                    .attr("x2", this.mousex + "px")
-                    .style("opacity", 0.5)
+                if (this.getMouseActiveOnChart()) {
+
+                    // TODO: refactor
+
+                    [this.mousex, this.mousey] = d3.mouse(d3.event.currentTarget)
+
+                    var x0 = this.xRange.invert(this.mousex)
+                    var dateText = x0.getDate() + "/" + (x0.getMonth() + 1) + "/" + x0.getFullYear() + "\n"
+
+                    var stockDataText = []
+                    this.separatedStockData.forEach(dataSet => {
+                        var datum = this.getDataForDate(dataSet, x0)
+                        var stockEntry = datum.Symbol + ': ' + (+datum.Close).toFixed(2) + '$'
+                        stockDataText.push(stockEntry)
+                    })
+
+                    //update vertical line position
+                    this.vertical.attr("x1", this.mousex + 10 + "px")
+                                 .attr("x2", this.mousex + 10 + "px")
+
+                    // update tooltip
+                    this.tooltip.attr("transform", `translate(${this.mousex + 15},${this.mousey - 40})`)
+                    
+                    this.tooltip.select('.tooltip-text.date')
+                            .text(dateText)
+
+                    this.localActiveStockSymbols.forEach((l, i) => {
+                        this.tooltip.select('.tooltip-text.' + l)
+                                .text(stockDataText[i]) 
+                    })
+                }
             })
             .on("mouseout", () => {
-                // this.vertical.style("opacity", 0)
+                if(this.getMouseActiveOnChart()) {
+                    this.vertical.style("opacity", 0)
+                    this.tooltip.style("opacity", 0)
+                } 
             })
+            .on("click", () => {
+                this.setMouseActiveOnChart(!this.getMouseActiveOnChart())
+            })           
     }
 
-
-
     setStockWatcher () {
+        // TODO: replace with angular2 native method
         const stockWatch = setInterval(() => {
             var local = JSON.stringify(this.localActiveStockSymbols)
             var service = JSON.stringify(this.getActiveStocks())
@@ -193,10 +269,19 @@ export class ChartComponent implements OnInit {
         }, 300)
     }
 
+    setMouseActiveOnChart(setting: boolean): void {
+        this.mouseActiveOnChart = setting
+    }
+
+    getMouseActiveOnChart(): boolean {
+        return this.mouseActiveOnChart
+    }
+
     ngOnInit(): void {
         this.initGraph()
         this.stockDataService.addActiveStock('YHOO')
         this.stockDataService.addActiveStock('MSFT')
+        this.setMouseActiveOnChart(true)
         this.getStockData()
         this.setStockWatcher()
     }

@@ -33,8 +33,8 @@ export class StockDataService {
         let month = now.getMonth() + 1
         let date = now.getDate()
 
-        var startDate = (year - 1) + '-' + (month) + '-' + date
-        // var startDate = (year) + '-' + (month - 2) + '-' + date
+        // var startDate = (year - 1) + '-' + (month) + '-' + date
+        var startDate = (year) + '-' + (month - 2) + '-' + date
         var endDate = year + '-' + month + '-' + date
 
         // var searchString = this.getYqlRequest(this.activeStocks, '2009-09-11', '2010-03-10')
@@ -48,14 +48,21 @@ export class StockDataService {
             .catch(this.handleError)
     }
 
+    getSingleYqlRequest(stockTerm: string, startDate: string, endDate: string): string {
+        let yqlRequest = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata' +
+            '%20where%20symbol%20%3D%20%22' + stockTerm +
+            '%22%20and%20startDate%20%3D%20%22'+ startDate + 
+            '%22%20and%20endDate%20%3D%20%22' + endDate +
+            '%22%20&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys' + 
+            '&callback=JSONP_CALLBACK'
+
+        return yqlRequest
+    }
+
 
     private handleError(er: any): Promise<any> {
         console.log('received http error', er)
         return Promise.reject(er.message || er)
-    }
-
-    getActiveStocks(): Array<string> {
-        return this.activeStocks
     }
 
     addActiveStock(stock: string) : void {
@@ -71,17 +78,20 @@ export class StockDataService {
         }
     }
 
+    getActiveStocks(): Array<string> {
+        return this.activeStocks
+    }
+
     getSelectedStock(): string {
         return this.selectedStock
     }
 
-    getColors(): Array<string> {
-        return this.colors
-    }
-
     setSelectedStock(target: string): void {
         this.selectedStock = target
-        console.log('selectedStock', this.selectedStock)
+    }
+
+    getColors(): Array<string> {
+        return this.colors
     }
 
 }

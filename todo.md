@@ -2,7 +2,6 @@
 
 **Current Active Todo**
 
-tooltip on mouse
 
 # YQL api
 - [x] use yql to generate different stock data sets 
@@ -16,9 +15,14 @@ tooltip on mouse
 - [ ] use angular2 system get data from service instead of the watcher i implemented
 - [ ] needs to handle no dataset
 - [x] line on chart at mouse
-- [ ] mouseover should show data on this date for all stocks
-- [ ] selected stock should have highlight instead of orange
-- [ ] tooltip at mousepoint
+- [x] mouseover should show data on this date for all stocks
+- [x] selected stock should have highlight instead of orange
+- [x] tooltip at mousepoint
+- [ ] gridlines
+- [x] tooltip should stay if clicked, even if cursor mouseouts of svg 
+- [ ] refactor tooltip
+- [ ] color-coding for 
+- [ ] chart doesn't need to do complete reload just to highlight selected stocks
 
 # Searchbar
 - [x] searchbar to send requested stock in uppercase to api
@@ -33,7 +37,7 @@ tooltip on mouse
 - [x] stock panel should be styled
 - [x] if stock active, chart should show selected line in different color
 - [x] stock can be deleted from selection here
-- [ ] delete button to be turned into corner x
+- [x] delete button to be turned into corner x
 - [ ] color match to be moved from name to sidebar
 
 # Websocket
