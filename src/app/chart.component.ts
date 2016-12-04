@@ -91,7 +91,7 @@ export class ChartComponent implements OnInit {
                 return dataSet[i + 1] || dataSet[i]
             }
         }
-        return
+        return dataSet[0]
     }
 
     initGraph() {
@@ -125,13 +125,12 @@ export class ChartComponent implements OnInit {
             .x(d => this.xRange(d['Date']))
             .y(d => this.yRange(d['Close']))
 
-        this.separatedStockData.forEach(individualStockDataSet => {
+        this.separatedStockData.forEach(dataSet => {
             this.chart.append("path")
-            .datum(individualStockDataSet)
-            .attr("class", "line")
+            .datum(dataSet)
+            .attr("class", "line line-" + dataSet[0].Symbol)
             .style("fill", "none")
             .style("stroke", d => this.stockColor[d[0].Symbol])
-            .style("stroke-width", d => d[0].Symbol == this.selectedStock ? "3px" : "1.5px")
             .attr("d", this.valueLine)
         })
 
@@ -181,8 +180,6 @@ export class ChartComponent implements OnInit {
                 .text(l)
         })
 
-
-
         this.overlay = this.chart.append("rect")
             .attr("class", "overlay")
             .attr("width", this.width - Margin.Left - Margin.Right + 'px')
@@ -225,7 +222,6 @@ export class ChartComponent implements OnInit {
                         var stockEntry = datum.Symbol + ': ' + (+datum.Close).toFixed(2) + '$'
                         this.tooltip.select('.tooltip-text.' + datum.Symbol)
                                 .text(stockEntry) 
-
                     })
                      // update tooltip position
                     this.tooltip.attr("transform", `translate(${this.mousex + 10},${this.mousey - 40})`)
@@ -258,8 +254,14 @@ export class ChartComponent implements OnInit {
             }
 
             else if(curSelectedStock !== this.selectedStock) {
+                this.chart.select('.line-' + this.selectedStock)
+                    .attr('class', 'line line-' + this.selectedStock)
+
                 this.selectedStock = curSelectedStock
-                this.renderGraph()
+
+                this.chart.select('.line-' + this.selectedStock)
+                    .attr('class', 'line line-' + this.selectedStock + ' line-selected')
+
             }
         }, 300)
     }

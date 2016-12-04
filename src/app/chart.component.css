@@ -27,7 +27,7 @@
     text-align: center;	
     left: 100px;
     top: 100px;		
-    width: 60px;					
+    width: 65px;					
     height: 28px;					
     padding: 2px;				
     font: 12px sans-serif;		
@@ -44,4 +44,12 @@
 .tooltip-text {
     fill: white;
     font-size: 11px;
+}
+
+.line {
+    stroke-width: 1.5px;
+}
+
+.line-selected {
+    stroke-width: 3px;
 }
