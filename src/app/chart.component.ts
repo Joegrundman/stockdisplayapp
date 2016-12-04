@@ -208,18 +208,19 @@ export class ChartComponent implements OnInit {
                 if (this.getMouseActiveOnChart()) {
 
                     [this.mousex, this.mousey] = d3.mouse(d3.event.currentTarget)
-
+                    
+                    // to get the position of the mouse as a point on the xRange
                     var x0 = this.xRange.invert(this.mousex)
 
-                    var dateText = x0.getDate() + "/" + (x0.getMonth() + 1) + "/" + x0.getFullYear() + "\n"
                     //update tooltip date
+                    var dateText = x0.getDate() + "/" + (x0.getMonth() + 1) + "/" + x0.getFullYear() + "\n"                 
                     this.tooltip.select('.tooltip-text.date')
                             .text(dateText)
 
                     //update tooltip stock prices
                     this.separatedStockData.forEach(dataSet => {
                         var datum = this.getDataForDate(dataSet, x0)
-                        var stockEntry = datum.Symbol + ': ' + (+datum.Close).toFixed(2) + '$'
+                        var stockEntry = datum.Symbol + ': ' + (+datum.Close).toFixed(2)
                         this.tooltip.select('.tooltip-text.' + datum.Symbol)
                                 .text(stockEntry) 
                     })
@@ -250,18 +251,18 @@ export class ChartComponent implements OnInit {
             var curSelectedStock = this.stockDataService.getSelectedStock()
 
             if(local !== service){
+                this.setMouseActiveOnChart(true)
                 this.getStockData()
             }
 
             else if(curSelectedStock !== this.selectedStock) {
                 this.chart.select('.line-' + this.selectedStock)
-                    .attr('class', 'line line-' + this.selectedStock)
+        ``            .attr('class', 'line line-' + this.selectedStock)
 
                 this.selectedStock = curSelectedStock
 
                 this.chart.select('.line-' + this.selectedStock)
                     .attr('class', 'line line-' + this.selectedStock + ' line-selected')
-
             }
         }, 300)
     }
