@@ -44,7 +44,7 @@ export class ChartComponent implements OnInit {
     private width: number
     private height: number
     private tooltip: any
-    private localActiveStockSymbols: Array<string>
+    private localActiveStockSymbols: Array<string> 
     private mousex: number
     private mousey: number
 
@@ -55,12 +55,15 @@ export class ChartComponent implements OnInit {
     }
 
     getStockData(): void {
-        if (!this.stockDataService.getActiveStocks().length) {
+        this.localActiveStockSymbols = this.getActiveStocks().slice()
+        if (!this.localActiveStockSymbols.length) {
             console.log('no stocks to show')
             this.separatedStockData = []
             this.renderGraph()
+            this.stockDataService.setIsLocked(false)
             return
-        }
+        } 
+
         this.stockDataService.getStockDataFromApi().then(stockData => {
 
             let parseTime = d3.timeParse("%Y-%m-%d")
@@ -76,7 +79,7 @@ export class ChartComponent implements OnInit {
 
             this.dataString = JSON.stringify(this.stockData)
             this.separatedStockData = []
-            this.localActiveStockSymbols = this.getActiveStocks().slice()
+           
 
             this.localActiveStockSymbols.forEach((stockName, i) => {
                 this.stockColor[stockName] = this.colors[i]
@@ -87,6 +90,7 @@ export class ChartComponent implements OnInit {
             this.renderGraph()
             this.stockDataService.setIsLocked(false)
         })
+        
     }
 
     getDataForDate(dataSet, x0) {
@@ -256,7 +260,6 @@ export class ChartComponent implements OnInit {
             var local = JSON.stringify(this.localActiveStockSymbols)
             var service = JSON.stringify(this.getActiveStocks())
             var curSelectedStock = this.stockDataService.getSelectedStock()
-
             if(local !== service && !this.stockDataService.getIsLocked()){
                 this.stockDataService.setIsLocked(true)
                 this.setMouseActiveOnChart(true)
