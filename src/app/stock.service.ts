@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Headers, Http, Jsonp } from '@angular/http'
+import { Jsonp } from '@angular/http'
 import 'rxjs/add/operator/toPromise'
 
 @Injectable()
@@ -8,10 +8,13 @@ export class StockDataService {
     private activeStocks: Array<string> = []
     private selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
+    private stockData: Array<any>
+    private isLocked: boolean = false
+    private separatedStockData: Array<any>
 
-    constructor(private http: Http, private jsonp: Jsonp) { }
+    constructor(private jsonp: Jsonp) { }
 
-    private headers = new Headers({'Content-Type': 'application/json'})
+    // private headers = new Headers({'Content-Type': 'application/json'})
 
     private getYqlRequest(terms: Array<string>, startDate: string, endDate: string): string {
         // wrap the search terms with double quotes and join with comma
@@ -27,15 +30,21 @@ export class StockDataService {
             return yqlRequest
     }
 
-    getStockDataFromApi(): Promise<any> {
-        let now = new Date()
-        let year = now.getFullYear()
-        let month = now.getMonth() + 1
-        let date = now.getDate()
+    getStockDataFromApi(months = 2): Promise<any> {
 
-        // var startDate = (year - 1) + '-' + (month) + '-' + date
-        var startDate = (year) + '-' + (month - 2) + '-' + date
-        var endDate = year + '-' + month + '-' + date
+        let now = new Date()
+        let endYear = now.getFullYear()
+        let endMonth = now.getMonth() + 1
+        let date = now.getDate()
+        let startMonth = endMonth - months
+        let startYear = endYear
+        if (startMonth < 1) { 
+            startMonth += 12
+            startYear -= 1 
+        }
+
+        var startDate = startYear + '-' + startMonth + '-' + date
+        var endDate = endYear + '-' + endMonth + '-' + date
 
         // var searchString = this.getYqlRequest(this.activeStocks, '2009-09-11', '2010-03-10')
         var searchString = this.getYqlRequest(this.activeStocks, startDate, endDate)
@@ -48,16 +57,27 @@ export class StockDataService {
             .catch(this.handleError)
     }
 
-    getSingleYqlRequest(stockTerm: string, startDate: string, endDate: string): string {
-        let yqlRequest = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata' +
-            '%20where%20symbol%20%3D%20%22' + stockTerm +
-            '%22%20and%20startDate%20%3D%20%22'+ startDate + 
-            '%22%20and%20endDate%20%3D%20%22' + endDate +
-            '%22%20&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys' + 
-            '&callback=JSONP_CALLBACK'
+    // getAllYqlRequests() {
+    //     let now = new Date()
+    //     let year = now.getFullYear()
+    //     let month = now.getMonth() + 1
+    //     let date = now.getDate()
 
-        return yqlRequest
-    }
+    //     // var startDate = (year - 1) + '-' + (month) + '-' + date
+    //     var startDate = (year) + '-' + (month - 2) + '-' + date
+    //     var endDate = year + '-' + month + '-' + date
+    // }
+
+    // getSingleYqlRequest(stockTerm: string, startDate: string, endDate: string): string {
+    //     let yqlRequest = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata' +
+    //         '%20where%20symbol%20%3D%20%22' + stockTerm +
+    //         '%22%20and%20startDate%20%3D%20%22'+ startDate + 
+    //         '%22%20and%20endDate%20%3D%20%22' + endDate +
+    //         '%22%20&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys' + 
+    //         '&callback=JSONP_CALLBACK'
+
+    //     return yqlRequest
+    // }
 
 
     private handleError(er: any): Promise<any> {
@@ -92,6 +112,26 @@ export class StockDataService {
 
     getColors(): Array<string> {
         return this.colors
+    }
+
+    getIsLocked(): boolean {
+        return this.isLocked
+    }
+
+    setIsLocked(isLocked: boolean): void {
+        this.isLocked = isLocked
+    }
+
+    getSeparatedStockData(): Array<any> {
+        return this.separatedStockData
+    }
+
+    addDatasetToSeparatedStockData(dataSet: Array<any>){
+        this.separatedStockData = this.separatedStockData.concat(dataSet)
+    }
+
+    removeDatasetFromSeparatedStockData(symbol: string) {
+        this.separatedStockData = this.separatedStockData.filter(d => d[0] != symbol)
     }
 
 }

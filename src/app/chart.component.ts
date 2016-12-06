@@ -29,7 +29,7 @@ export class ChartComponent implements OnInit {
     private dataString: string
     private separatedStockData: Array<any>
     private tooltipData: Array<any>
-    private selectedStock: string 
+    private selectedStock: string = ''
     private timestamps: Array<Date>
     private volumes: Array<Number>
     private highs: Array<Number>
@@ -55,6 +55,12 @@ export class ChartComponent implements OnInit {
     }
 
     getStockData(): void {
+        if (!this.stockDataService.getActiveStocks().length) {
+            console.log('no stocks to show')
+            this.separatedStockData = []
+            this.renderGraph()
+            return
+        }
         this.stockDataService.getStockDataFromApi().then(stockData => {
 
             let parseTime = d3.timeParse("%Y-%m-%d")
@@ -79,6 +85,7 @@ export class ChartComponent implements OnInit {
 
             console.log("the number of different stock data sets is", this.separatedStockData.length)
             this.renderGraph()
+            this.stockDataService.setIsLocked(false)
         })
     }
 
@@ -250,14 +257,16 @@ export class ChartComponent implements OnInit {
             var service = JSON.stringify(this.getActiveStocks())
             var curSelectedStock = this.stockDataService.getSelectedStock()
 
-            if(local !== service){
+            if(local !== service && !this.stockDataService.getIsLocked()){
+                this.stockDataService.setIsLocked(true)
                 this.setMouseActiveOnChart(true)
                 this.getStockData()
             }
 
             else if(curSelectedStock !== this.selectedStock) {
+                
                 this.chart.select('.line-' + this.selectedStock)
-        ``            .attr('class', 'line line-' + this.selectedStock)
+                    .attr('class', 'line line-' + this.selectedStock)
 
                 this.selectedStock = curSelectedStock
 

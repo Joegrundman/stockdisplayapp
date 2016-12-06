@@ -1,6 +1,6 @@
 ## Stock Display Todo Lst
 
-**Current Active Todo**
+**Currently Working On**
 
 
 # YQL api
@@ -19,10 +19,8 @@
 - [x] selected stock should have highlight instead of orange
 - [x] tooltip at mousepoint
 - [ ] gridlines
-- [x] tooltip should stay if clicked, even if cursor mouseouts of svg 
-- [ ] refactor tooltip
-- [ ] color-coding for 
-- [ ] chart doesn't need to do complete reload just to highlight selected stocks
+- [x] tooltip should stay if clicked, even if cursor mouseouts of svg  
+- [x] chart shouldn't reload just to highlight selected stocks
 
 # Searchbar
 - [x] searchbar to send requested stock in uppercase to api
@@ -38,7 +36,6 @@
 - [x] if stock active, chart should show selected line in different color
 - [x] stock can be deleted from selection here
 - [x] delete button to be turned into corner x
-- [ ] color match to be moved from name to sidebar
 
 # Websocket
 - [ ] integrate with websocket backend so all users can share the current data
