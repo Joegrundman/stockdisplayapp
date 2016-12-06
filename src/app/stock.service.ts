@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core'
-import { Jsonp } from '@angular/http'
+import { Http, Jsonp } from '@angular/http'
+
 import 'rxjs/add/operator/toPromise'
+
+export class StockDetail {
+    Symbol: string
+    Close: number
+    Date: Date
+}
 
 @Injectable()
 export class StockDataService { 
@@ -12,21 +19,21 @@ export class StockDataService {
     private isLocked: boolean = false
     private separatedStockData: Array<any>
 
-    constructor(private jsonp: Jsonp) { }
+    constructor(private jsonp: Jsonp, private http: Http) { }
 
     // private headers = new Headers({'Content-Type': 'application/json'})
 
     private getYqlRequest(terms: Array<string>, startDate: string, endDate: string): string {
         // wrap the search terms with double quotes and join with comma
         let searchTerms = terms.map(t => '%22' + t + '%22').join('%2C')
-        console.log("Searchterms", searchTerms,)
-        console.log("decoded", decodeURIComponent(searchTerms))
-        let yqlRequest = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata' +
+        let yqlRequest = 'https://query.yahooapis.com/v1/public/yql?q=' + 
+                    'select%20Symbol%2C%20Close%2C%20Date' +
+                    '%20from%20yahoo.finance.historicaldata' +
                     '%20where%20symbol%20in%20%28' + searchTerms +
                     '%29%20and%20startDate%20%3D%20%22' + startDate + 
                     '%22%20and%20endDate%20%3D%20%22' + endDate +
                     '%22%20&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys' + 
-                    '&callback=JSONP_CALLBACK'
+                    ''
             return yqlRequest
     }
 
@@ -46,9 +53,8 @@ export class StockDataService {
         var startDate = startYear + '-' + startMonth + '-' + date
         var endDate = endYear + '-' + endMonth + '-' + date
 
-        // var searchString = this.getYqlRequest(this.activeStocks, '2009-09-11', '2010-03-10')
         var searchString = this.getYqlRequest(this.activeStocks, startDate, endDate)
-        return this.jsonp.get(searchString)
+        return this.http.get(searchString)
             .toPromise()
             .then(response => {
                 var data = response.json()            
