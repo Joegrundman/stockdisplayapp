@@ -13,7 +13,7 @@
 - [x] Needs to rerender all graphs and axes on update
 - [x] different stocks to be color-coded
 - [ ] use angular2 system get data from service instead of the watcher i implemented
-- [ ] needs to handle no dataset
+- [x] needs to handle no dataset
 - [x] line on chart at mouse
 - [x] mouseover should show data on this date for all stocks
 - [x] selected stock should have highlight instead of orange
