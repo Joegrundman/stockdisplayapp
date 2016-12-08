@@ -1,7 +1,10 @@
 import { Component, Output, OnInit } from '@angular/core'
+
 import * as io from 'socket.io-client'
 import {StockDetail} from './stock-detail'
 import {StockDataService} from './stock.service'
+import { environment } from '../environments/environment';
+
 // TODO: host main app state in this component, enabling parent-child info handling if time
 // service will remain more strictly service for api calls
 
@@ -43,29 +46,32 @@ export class AppComponent implements OnInit {
     
     // constructor(private stockDataService: StockDataService){}
 
-    // addActiveStock(stock: string): void {
-    //     this.activeStocks = this.activeStocks.concat(stock)
-    // }
+    addActiveStock(stock: string): void {
+        this.activeStocks = this.activeStocks.concat(stock)
+    }
 
-    // deleteActiveStock(stock: string): void {
-    //     this.activeStocks = this.activeStocks.filter(s => s != stock)
-    // }
+    deleteActiveStock(stock: string): void {
+        this.activeStocks = this.activeStocks.filter(s => s != stock)
+    }
 
-    // getSelectedStock(): string {
-    //   return this.selectedStock
-    // }
+    getSelectedStock(): string {
+      return this.selectedStock
+    }
 
-    // setSelectedStock(stock: string): void {
-    //   this.selectedStock = stock
-    // }
+    setSelectedStock(stock: string): void {
+      this.selectedStock = stock
+    }
 
-    setOnlineUsers(users: number): void {
-      this.onlineUsers = users
+    setOnlineUsers(data: any): void {
+      this.onlineUsers = data.onlineUsers
     }
 
     ngOnInit(): void {
-      let socket = io.connect()
 
-      socket.on('onlineUsers', data => this.setOnlineUsers(data))
+      if(environment.production){
+        let socket = io.connect()
+        socket.on('onlineUsers', data => this.setOnlineUsers(data))
+      }
+
     }
 }
