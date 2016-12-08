@@ -45,6 +45,7 @@ export class ChartComponent implements OnInit {
     private height: number
     private tooltip: any
     private localActiveStockSymbols: Array<string> 
+    private months: number
     private mousex: number
     private mousey: number
 
@@ -54,7 +55,7 @@ export class ChartComponent implements OnInit {
         return this.stockDataService.getActiveStocks()
     }
 
-    getStockData(): void {
+    getStockData(months: number): void {
         this.localActiveStockSymbols = this.getActiveStocks().slice()
         if (!this.localActiveStockSymbols.length) {
             console.log('no stocks to show')
@@ -64,16 +65,16 @@ export class ChartComponent implements OnInit {
             return
         } 
 
-        this.stockDataService.getStockDataFromApi().then(stockData => {
+        this.stockDataService.getStockDataFromApi(months).then(stockData => {
 
             let parseTime = d3.timeParse("%Y-%m-%d")
             this.stockData = stockData.map(d => {
                 d.Date = parseTime(d.Date)
-                delete d.Open
-                delete d.High
-                delete d.Low
-                delete d.Volume
-                delete d.Adj_Close
+                // delete d.Open
+                // delete d.High
+                // delete d.Low
+                // delete d.Volume
+                // delete d.Adj_Close
                 return d
             })
 
@@ -263,7 +264,7 @@ export class ChartComponent implements OnInit {
             if(local !== service && !this.stockDataService.getIsLocked()){
                 this.stockDataService.setIsLocked(true)
                 this.setMouseActiveOnChart(true)
-                this.getStockData()
+                this.getStockData(this.months)
             }
 
             else if(curSelectedStock !== this.selectedStock) {
@@ -292,7 +293,8 @@ export class ChartComponent implements OnInit {
         this.stockDataService.addActiveStock('YHOO')
         this.stockDataService.addActiveStock('MSFT')
         this.setMouseActiveOnChart(true)
-        this.getStockData()
+        this.months = 2
+        this.getStockData(this.months)
         this.setStockWatcher()
     }
 

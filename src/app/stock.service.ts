@@ -3,12 +3,6 @@ import { Http, Jsonp } from '@angular/http'
 
 import 'rxjs/add/operator/toPromise'
 
-export class StockDetail {
-    Symbol: string
-    Close: number
-    Date: Date
-}
-
 @Injectable()
 export class StockDataService { 
 
@@ -32,12 +26,16 @@ export class StockDataService {
                     '%20where%20symbol%20in%20%28' + searchTerms +
                     '%29%20and%20startDate%20%3D%20%22' + startDate + 
                     '%22%20and%20endDate%20%3D%20%22' + endDate +
-                    '%22%20&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys' + 
+                    '%22%20&format=json&diagnostics=true' + 
+                    '&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys' + 
+                    // '&callback=JSONP_CALLBACK'
                     ''
+
+            console.log('yqlRequest', yqlRequest)
             return yqlRequest
     }
 
-    getStockDataFromApi(months = 2): Promise<any> {
+    getStockDataFromApi(months: number): Promise<any> {
 
         let now = new Date()
         let endYear = now.getFullYear()
@@ -55,6 +53,7 @@ export class StockDataService {
 
         var searchString = this.getYqlRequest(this.activeStocks, startDate, endDate)
         return this.http.get(searchString)
+        // return this.jsonp.get(searchString)
             .toPromise()
             .then(response => {
                 var data = response.json()            
