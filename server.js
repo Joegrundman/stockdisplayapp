@@ -19,15 +19,21 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var onlineUsers = 0;
 
+var activeStocks = ['YHOO', 'MSFT']
+
 io.on('connection', function(socket){
     onlineUsers++;
 
     io.emit('onlineUsers', { onlineUsers: onlineUsers });
-
+    io.emit('activeStocksUpdate', { activeStocks: activeStocks });
     socket.on('disconnect', function() {
         onlineUsers--;
         io.emit('onlineUsers', { onlineUsers: onlineUsers });
 
+    });
+
+    socket.on('activeStockUpdate', function () {
+        io.emit('activeStocksUpdate', { activeStocks: activeStocks });
     });
 });
 

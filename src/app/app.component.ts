@@ -1,7 +1,7 @@
-import { Component, Output, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 
 import * as io from 'socket.io-client'
-import {StockDetail} from './stock-detail'
+// import {StockDetail} from './stock-detail'
 import {StockDataService} from './stock.service'
 import { environment } from '../environments/environment';
 
@@ -35,23 +35,27 @@ import { environment } from '../environments/environment';
 `]
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent  {
 
+    public socket: any
     private title = 'Stock Display'
-    public onlineUsers: number = 0
-    public activeStocks: Array<string> = []
+    public onlineUsers: number 
+    public appActiveStocks: Array<string>
     private selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     // public stockData: Array<StockDetail>
     
-    // constructor(private stockDataService: StockDataService){}
+    constructor(private stockDataService: StockDataService){}
 
     addActiveStock(stock: string): void {
-        this.activeStocks = this.activeStocks.concat(stock)
+        this.appActiveStocks = this.appActiveStocks.concat(stock)
+        this.socket.emit('activeStockUpdate', JSON.stringify(this.appActiveStocks))
     }
 
     deleteActiveStock(stock: string): void {
-        this.activeStocks = this.activeStocks.filter(s => s != stock)
+        this.appActiveStocks = this.appActiveStocks.filter(s => s != stock)
+        this.socket.emit('activeStockUpdate', JSON.stringify(this.appActiveStocks))
+
     }
 
     getSelectedStock(): string {
@@ -66,11 +70,17 @@ export class AppComponent implements OnInit {
       this.onlineUsers = data.onlineUsers
     }
 
+    updateActiveStocks(data: any): void {
+      this.appActiveStocks = JSON.parse(data.activeStocks)
+      console.log('appActiveStocks', this.appActiveStocks)
+    }
+
     ngOnInit(): void {
 
       if(environment.production){
-        let socket = io.connect()
-        socket.on('onlineUsers', data => this.setOnlineUsers(data))
+        this.socket = io.connect()
+        this.socket.on('onlineUsers', data => this.setOnlineUsers(data))
+        this.socket.on('activeStockUpdate', data => this.updateActiveStocks(data))
       }
 
     }
