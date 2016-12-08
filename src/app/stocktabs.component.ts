@@ -36,6 +36,7 @@ export class StocktabsComponent {
         // this.stockDataService.deleteActiveStock(st)
         // this.selectedStock = null
         // this.activeStocks = this.stockDataService.getActiveStocks()
+        console.log('stocktabs onDelete')
         if(this.selectedStock == st) {
             this.selectedStock = null
         }

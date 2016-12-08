@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
     <h3>A stock-price history display using angular2, d3js and the yahoo finance api</h3>
     <chart-component></chart-component>
     <searchbar-component></searchbar-component>
-    <stocktabs-component [activeStocks]='activeStocks'></stocktabs-component>
+    <stocktabs-component [activeStocks]='activeStocks' (deleteStock)="onDeleteStock($event)"></stocktabs-component>
     `,
     styles: [`
     h1 {
@@ -52,10 +52,11 @@ export class AppComponent  {
         this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
     }
 
-    deleteActiveStock(stock: string): void {
+    onDeleteStock(stock: string): void {
+      console.log('app onDeleteStock', stock)
         this.activeStocks = this.activeStocks.filter(s => s != stock)
-        this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
-
+        this.socket.emit('deleteStock', stock)
+        // this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
     }
 
     getSelectedStock(): string {

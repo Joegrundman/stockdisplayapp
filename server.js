@@ -26,6 +26,7 @@ io.on('connection', function(socket){
 
     io.emit('onlineUsers', { onlineUsers: onlineUsers });
     io.emit('activeStocksUpdate', { activeStocks: activeStocks });
+
     socket.on('disconnect', function() {
         onlineUsers--;
         io.emit('onlineUsers', { onlineUsers: onlineUsers });
@@ -35,6 +36,11 @@ io.on('connection', function(socket){
     socket.on('activeStockUpdate', function () {
         io.emit('activeStocksUpdate', { activeStocks: activeStocks });
     });
+
+    socket.on('deleteStock', function(toDelete) {
+        activeStocks = activeStocks.filter(stock => stock != toDelete)
+        io.emit('activeStocksUpdate', { activeStocks: activeStocks });
+    })
 });
 
 server.listen(app.get('port'), function() {
