@@ -38,4 +38,4 @@
 - [x] delete button to be turned into corner x
 
 # Websocket
-- [ ] integrate with websocket backend so all users can share the current data
+- [x] integrate with websocket backend so all users can share the current data

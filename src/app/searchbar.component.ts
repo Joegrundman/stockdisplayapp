@@ -18,7 +18,7 @@ export class SearchbarComponent {
 
     constructor(private stockDataService: StockDataService) { }
     
-    @Output() addStock: EventEmitter<string> = new EventEmitter()
+    @Output() addStock: EventEmitter<string> = new EventEmitter<string>()
 
     onClick () {
         var scv = document.querySelector('input[name=stock-code-value]')

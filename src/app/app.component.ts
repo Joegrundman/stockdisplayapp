@@ -47,10 +47,10 @@ export class AppComponent  {
     
     constructor(private stockDataService: StockDataService){}
 
-    addActiveStock(stock: string): void {
-        this.activeStocks = this.activeStocks.concat(stock)
-        this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
-    }
+    // addActiveStock(stock: string): void {
+    //     this.activeStocks = this.activeStocks.concat(stock)
+    //     this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
+    // }
 
     onAddStock(stock: string): void {
       console.log('app addStock', stock)

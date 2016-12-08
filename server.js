@@ -39,11 +39,13 @@ io.on('connection', function(socket){
 
     socket.on('deleteStock', function(toDelete) {
         activeStocks = activeStocks.filter(stock => stock != toDelete)
+        console.log('deleting stock', toDelete)
         io.emit('activeStocksUpdate', { activeStocks: activeStocks });
     })
 
     socket.on('addStock', function(toAdd) {
         activeStocks = activeStocks.concat([toAdd])
+        console.log('adding stock', toAdd)
         io.emit('activeStocksUpdate', { activeStocks: activeStocks });        
     })
 });
