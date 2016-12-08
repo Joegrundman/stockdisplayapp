@@ -14,7 +14,7 @@ import { environment } from '../environments/environment';
     <h1>{{title}}  {{onlineUsers}} users online</h1>
     <h3>A stock-price history display using angular2, d3js and the yahoo finance api</h3>
     <chart-component></chart-component>
-    <searchbar-component></searchbar-component>
+    <searchbar-component (addStock)="onAddStock($event)"></searchbar-component>
     <stocktabs-component [activeStocks]='activeStocks' (deleteStock)="onDeleteStock($event)"></stocktabs-component>
     `,
     styles: [`
@@ -50,6 +50,12 @@ export class AppComponent  {
     addActiveStock(stock: string): void {
         this.activeStocks = this.activeStocks.concat(stock)
         this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
+    }
+
+    onAddStock(stock: string): void {
+      console.log('app addStock', stock)
+      this.activeStocks = this.activeStocks.concat([stock])
+      this.socket.emit('addStock', stock)
     }
 
     onDeleteStock(stock: string): void {

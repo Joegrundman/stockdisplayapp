@@ -1,4 +1,4 @@
-import {Component} from '@angular/core'
+import {Component, Output, EventEmitter} from '@angular/core'
 
 import { StockDataService } from './stock.service'
 
@@ -6,7 +6,7 @@ import { StockDataService } from './stock.service'
     selector: 'searchbar-component',
     template: `
     <div class="searchbar"> 
-    Enter the stock symbol here (e.g. GOOG, FB, GE, TSCO.L):  
+    Enter the stock symbol here (e.g. GOOG, FB, GE, TSCO.L, AAPL):  
     <input class="searchbar-input" name="stock-code-value" value="" placeholder="stock symbol">
     <button class="searchbar-button" (click)="onClick()">Search!</button>
     </div>
@@ -18,12 +18,14 @@ export class SearchbarComponent {
 
     constructor(private stockDataService: StockDataService) { }
     
+    @Output() addStock: EventEmitter<string> = new EventEmitter()
 
     onClick () {
         var scv = document.querySelector('input[name=stock-code-value]')
         var searchTerm = scv["value"].toUpperCase()
         if(!searchTerm || searchTerm.trim() === ''){ scv["value"] = '';  return }
-        this.stockDataService.addActiveStock(searchTerm)
+        // this.stockDataService.addActiveStock(searchTerm)
+        this.addStock.emit(searchTerm)
         scv["value"] = ''
     }
 }

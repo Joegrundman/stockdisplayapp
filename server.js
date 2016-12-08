@@ -19,7 +19,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var onlineUsers = 0;
 
-var activeStocks = ['YHOO', 'MSFT']
+var activeStocks = ['YHOO', 'MSFT', 'FB']
 
 io.on('connection', function(socket){
     onlineUsers++;
@@ -40,6 +40,11 @@ io.on('connection', function(socket){
     socket.on('deleteStock', function(toDelete) {
         activeStocks = activeStocks.filter(stock => stock != toDelete)
         io.emit('activeStocksUpdate', { activeStocks: activeStocks });
+    })
+
+    socket.on('addStock', function(toAdd) {
+        activeStocks = activeStocks.concat([toAdd])
+        io.emit('activeStocksUpdate', { activeStocks: activeStocks });        
     })
 });
 
