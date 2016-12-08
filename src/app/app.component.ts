@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
     <h3>A stock-price history display using angular2, d3js and the yahoo finance api</h3>
     <chart-component></chart-component>
     <searchbar-component></searchbar-component>
-    <stocktabs-component></stocktabs-component>
+    <stocktabs-component [activeStocks]='activeStocks'></stocktabs-component>
     `,
     styles: [`
     h1 {
@@ -39,8 +39,8 @@ export class AppComponent  {
 
     public socket: any
     private title = 'Stock Display'
-    public onlineUsers: number 
-    public appActiveStocks: Array<string>
+    public onlineUsers: number = 0
+    public activeStocks: Array<string>
     private selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     // public stockData: Array<StockDetail>
@@ -48,13 +48,13 @@ export class AppComponent  {
     constructor(private stockDataService: StockDataService){}
 
     addActiveStock(stock: string): void {
-        this.appActiveStocks = this.appActiveStocks.concat(stock)
-        this.socket.emit('activeStockUpdate', JSON.stringify(this.appActiveStocks))
+        this.activeStocks = this.activeStocks.concat(stock)
+        this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
     }
 
     deleteActiveStock(stock: string): void {
-        this.appActiveStocks = this.appActiveStocks.filter(s => s != stock)
-        this.socket.emit('activeStockUpdate', JSON.stringify(this.appActiveStocks))
+        this.activeStocks = this.activeStocks.filter(s => s != stock)
+        this.socket.emit('activeStockUpdate', JSON.stringify(this.activeStocks))
 
     }
 
@@ -67,21 +67,23 @@ export class AppComponent  {
     }
 
     setOnlineUsers(data: any): void {
+      console.log('onlineUsers update')
       this.onlineUsers = data.onlineUsers
     }
 
     updateActiveStocks(data: any): void {
-      this.appActiveStocks = JSON.parse(data.activeStocks)
-      console.log('appActiveStocks', this.appActiveStocks)
+      this.activeStocks = data.activeStocks
+      this.stockDataService.setActiveStocks(this.activeStocks)
+      console.log('appActiveStocks', this.activeStocks)
     }
 
     ngOnInit(): void {
 
-      if(environment.production){
+
         this.socket = io.connect()
         this.socket.on('onlineUsers', data => this.setOnlineUsers(data))
-        this.socket.on('activeStockUpdate', data => this.updateActiveStocks(data))
-      }
+        this.socket.on('activeStocksUpdate', data => this.updateActiveStocks(data))
+      
 
     }
 }

@@ -139,4 +139,8 @@ export class StockDataService {
         this.separatedStockData = this.separatedStockData.filter(d => d[0] != symbol)
     }
 
+    setActiveStocks(stocks: Array<string>) {
+        this.activeStocks = stocks
+    }
+
 }

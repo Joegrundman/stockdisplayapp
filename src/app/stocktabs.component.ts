@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Input, Output, EventEmitter } from '@angular/core'
 import {StockDataService} from './stock.service'
 
 @Component({
@@ -20,7 +20,10 @@ import {StockDataService} from './stock.service'
 export class StocktabsComponent {
 
     constructor(private stockDataService: StockDataService){}
-    private activeStocks: Array<string> = this.stockDataService.getActiveStocks()
+    @Input() activeStocks: Array<string>
+    @Output() deleteStock: EventEmitter<string> = new EventEmitter<string>()
+
+    // private activeStocks: Array<string> = this.stockDataService.getActiveStocks()
     private colors: Array<string> = this.stockDataService.getColors()
     private selectedStock: string
 
@@ -30,8 +33,13 @@ export class StocktabsComponent {
     }
 
     onDelete(st: string): void {
-        this.stockDataService.deleteActiveStock(st)
-        this.selectedStock = null
-        this.activeStocks = this.stockDataService.getActiveStocks()
+        // this.stockDataService.deleteActiveStock(st)
+        // this.selectedStock = null
+        // this.activeStocks = this.stockDataService.getActiveStocks()
+        if(this.selectedStock == st) {
+            this.selectedStock = null
+        }
+        this.deleteStock.emit(st)
+        
     }
  }
