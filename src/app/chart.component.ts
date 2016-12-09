@@ -30,9 +30,10 @@ export class ChartComponent implements OnInit {
     private separatedStockData: Array<any>
     private tooltipData: Array<any>
     @Input() selectedStock: string
-    private timestamps: Array<Date>
-    private volumes: Array<Number>
-    private highs: Array<Number>
+    @Input() activeStocks: Array<string>
+    // private timestamps: Array<Date>
+    // private volumes: Array<Number>
+    // private highs: Array<Number>
     private chart: any
     private colors: Array<string> = ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     private stockColor: Object = {}
@@ -52,6 +53,7 @@ export class ChartComponent implements OnInit {
     constructor(private stockDataService: StockDataService){}
 
     getActiveStocks(): Array<string> {
+        // return this.activeStocks || []
         return this.stockDataService.getActiveStocks()
     }
 
@@ -255,6 +257,7 @@ export class ChartComponent implements OnInit {
         // TODO: replace with angular2 native method
         const stockWatch = setInterval(() => {
             var local = JSON.stringify(this.localActiveStockSymbols)
+            // var service = JSON.stringify(this.activeStocks)
             var service = JSON.stringify(this.getActiveStocks())
 
             if(local !== service && !this.stockDataService.getIsLocked()){

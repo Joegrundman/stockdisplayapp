@@ -11,7 +11,9 @@ import { environment } from '../environments/environment';
     template: `
     <h1>{{title}}   -  {{onlineUsers}} users online</h1>
     <h3>A stock-price history display using angular2, d3js, websockets, and the yahoo finance api</h3>
-    <chart-component [selectedStock]='selectedStock'></chart-component>
+    <chart-component 
+      [activeStocks]='activeStocks'
+      [selectedStock]='selectedStock'></chart-component>
     <searchbar-component (addStock)="onAddStock($event)"></searchbar-component>
     <stocktabs-component 
         [selectedStock]='selectedStock'
@@ -42,13 +44,14 @@ export class AppComponent  {
     public socket: any
     private title = 'Stock Display'
     public onlineUsers: number = 0
-    public activeStocks: Array<string>
+    public activeStocks: Array<string> = []
     public selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
 
     constructor(private stockDataService: StockDataService){}
 
     onAddStock(stock: string): void {
+      if (this.activeStocks.indexOf(stock) > -1) { return }
       this.activeStocks = this.activeStocks.concat([stock])
       this.socket.emit('addStock', stock)
     }
@@ -59,7 +62,6 @@ export class AppComponent  {
     }
 
     onSetSelectedStock(stock: string): void {
-      console.log('App setSelectedStock')
       this.selectedStock = stock
     }
 

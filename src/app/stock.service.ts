@@ -7,7 +7,6 @@ import 'rxjs/add/operator/toPromise'
 export class StockDataService { 
 
     private activeStocks: Array<string> = []
-    // private selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     private stockData: Array<any>
     private isLocked: boolean = false
