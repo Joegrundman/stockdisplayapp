@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import * as io from 'socket.io-client'
+import *  as d3 from 'd3'
 import {StockDataService} from './stock.service'
 import { environment } from '../environments/environment';
 
@@ -13,6 +14,7 @@ import { environment } from '../environments/environment';
     <h3>A stock-price history display using angular2, d3js, websockets, and the yahoo finance api</h3>
     <chart-component 
       [activeStocks]='activeStocks'
+      [separatedStockData]='separatedStockData'
       [selectedStock]='selectedStock'></chart-component>
     <searchbar-component (addStock)="onAddStock($event)"></searchbar-component>
     <stocktabs-component 
@@ -44,6 +46,8 @@ export class AppComponent  {
     public socket: any
     private title = 'Stock Display'
     public onlineUsers: number = 0
+    public separatedStockData: Array<Object> = []
+    public stockData: Object
     public activeStocks: Array<string> 
     public selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
@@ -65,6 +69,27 @@ export class AppComponent  {
       this.selectedStock = stock
     }
 
+    setStockData(data: any): void {
+      console.log('receiving update')
+      this.stockData = data.stockData
+      let parseTime = d3.timeParse("%Y-%m-%d")
+      this.separatedStockData = []
+      var tempData:Array<any> = []
+      this.activeStocks.forEach(stock => {
+          if(this.stockData[stock].hasOwnProperty('msg') ){
+            console.log('this stock was not found', stock)
+          } else {
+            tempData.push(this.stockData[stock]
+            .map(d => {
+              d.Date = parseTime(d.Date)
+              return d
+            }))
+
+          }
+      })
+      this.separatedStockData = tempData
+    }
+
     setOnlineUsers(data: any): void {
       this.onlineUsers = data.onlineUsers
     }
@@ -76,11 +101,10 @@ export class AppComponent  {
 
     ngOnInit(): void {
 
-
         this.socket = io.connect()
         this.socket.on('onlineUsers', data => this.setOnlineUsers(data))
         this.socket.on('activeStocksUpdate', data => this.updateActiveStocks(data))
-      
+        this.socket.on('stockData', data => this.setStockData(data))
 
     }
 }

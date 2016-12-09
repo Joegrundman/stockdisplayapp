@@ -33,6 +33,7 @@
     "socket.io": "^1.7.1",
     "socket.io-client": "^1.7.1",
     "ts-helpers": "^1.1.1",
+    "ystocks": "^0.1.0",
     "zone.js": "^0.6.23"
   },
   "devDependencies": {
@@ -44,6 +45,7 @@
     "@types/socket.io-client": "^1.4.29",
     "angular-cli": "1.0.0-beta.21",
     "codelyzer": "~1.0.0-beta.3",
+    "dotenv": "^2.0.0",
     "jasmine-core": "2.5.2",
     "jasmine-spec-reporter": "2.5.0",
     "karma": "1.2.0",

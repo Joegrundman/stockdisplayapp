@@ -60,6 +60,7 @@ export class StockDataService {
             })
             .catch(this.handleError)
     }
+    
 
     // getAllYqlRequests() {
     //     let now = new Date()

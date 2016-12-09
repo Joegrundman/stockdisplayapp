@@ -27,8 +27,8 @@ export class ChartComponent implements OnInit {
     private mouseActiveOnChart: boolean 
     private stockData: Array<any>
     private dataString: string
-    private separatedStockData: Array<any>
     private tooltipData: Array<any>
+    @Input() separatedStockData: Array<any>
     @Input() selectedStock: string
     @Input() activeStocks: Array<string>
     private chart: any
@@ -51,41 +51,27 @@ export class ChartComponent implements OnInit {
 
     getActiveStocks(): Array<string> {
         return this.activeStocks || []
-        // return this.stockDataService.getActiveStocks()
     }
 
     getStockData(months: number): void {
         this.localActiveStockSymbols = this.getActiveStocks().slice()
-        if (!this.localActiveStockSymbols.length) {
+        if(!this.localActiveStockSymbols.length){
             console.log('no stocks to show')
             this.separatedStockData = []
             this.renderGraph()
-            this.stockDataService.setIsLocked(false)
             return
-        } 
-
-        this.stockDataService.getStockDataFromApi(months).then(stockData => {
-
-            let parseTime = d3.timeParse("%Y-%m-%d")
-            this.stockData = stockData.map(d => {
-                d.Date = parseTime(d.Date)
-                return d
-            })
-
-            this.dataString = JSON.stringify(this.stockData)
-            this.separatedStockData = []
-           
+        }
 
             this.localActiveStockSymbols.forEach((stockName, i) => {
                 this.stockColor[stockName] = this.colors[i]
-                this.separatedStockData.push(this.stockData.filter(element => element.Symbol === stockName))
             })
 
-            console.log("the number of different stock data sets is", this.separatedStockData.length)
-            this.renderGraph()
-            this.stockDataService.setIsLocked(false)
-        })
-        
+        this.stockData = this.separatedStockData.reduce((a,b) => a.concat(b))
+        console.log('stocks to show', this.separatedStockData)
+        console.log("the number of different stock data sets is", this.separatedStockData.length)
+
+        this.renderGraph()
+
     }
 
     getDataForDate(dataSet, x0) {
@@ -130,6 +116,8 @@ export class ChartComponent implements OnInit {
         this.valueLine = d3.line()
             .x(d => this.xRange(d['Date']))
             .y(d => this.yRange(d['Close']))
+
+
 
         this.separatedStockData.forEach(dataSet => {
             this.chart.append("path")
@@ -251,15 +239,15 @@ export class ChartComponent implements OnInit {
 
     setStockWatcher () {
         var curSelectedStock = ''
+        var curData = {}
         // TODO: replace with angular2 native method
-        const stockWatch = setInterval(() => {
-            var local = JSON.stringify(this.localActiveStockSymbols)
-            var service = JSON.stringify(this.activeStocks)
-            // var service = JSON.stringify(this.getActiveStocks())
 
-            if(local !== service && !this.stockDataService.getIsLocked()){
-                this.stockDataService.setIsLocked(true)
+        const stockWatch = setInterval(() => {
+
+            if( curData != this.separatedStockData) {
+                console.log("updating")
                 this.setMouseActiveOnChart(true)
+                curData = this.separatedStockData
                 this.getStockData(this.months)
             }
 
