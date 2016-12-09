@@ -70,7 +70,6 @@
 
 .searchbar-button:focus{
     outline: 0 !important;
-    /*background-color: #f1f1f1;*/
 }
 
 .searchbar-button:active:after {
