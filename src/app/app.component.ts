@@ -44,7 +44,7 @@ export class AppComponent  {
     public socket: any
     private title = 'Stock Display'
     public onlineUsers: number = 0
-    public activeStocks: Array<string> = []
+    public activeStocks: Array<string> 
     public selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
 
