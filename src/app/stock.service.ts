@@ -7,7 +7,7 @@ import 'rxjs/add/operator/toPromise'
 export class StockDataService { 
 
     private activeStocks: Array<string> = []
-    private selectedStock: string = ''
+    // private selectedStock: string = ''
     private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     private stockData: Array<any>
     private isLocked: boolean = false
@@ -98,22 +98,22 @@ export class StockDataService {
 
     deleteActiveStock(target: string) : void {
         this.activeStocks = this.activeStocks.filter(stock => stock !== target)
-        if( this.selectedStock == target ) {
-            this.selectedStock = ''
-        }
+        // if( this.selectedStock == target ) {
+        //     this.selectedStock = ''
+        // }
     }
 
     getActiveStocks(): Array<string> {
         return this.activeStocks
     }
 
-    getSelectedStock(): string {
-        return this.selectedStock
-    }
+    // getSelectedStock(): string {
+    //     return this.selectedStock
+    // }
 
-    setSelectedStock(target: string): void {
-        this.selectedStock = target
-    }
+    // setSelectedStock(target: string): void {
+    //     this.selectedStock = target
+    // }
 
     getColors(): Array<string> {
         return this.colors

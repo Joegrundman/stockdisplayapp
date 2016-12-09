@@ -20,17 +20,21 @@ import {StockDataService} from './stock.service'
 export class StocktabsComponent {
 
     constructor(private stockDataService: StockDataService){}
+    @Input() selectedStock: string
     @Input() activeStocks: Array<string>
     @Output() deleteStock: EventEmitter<string> = new EventEmitter<string>()
-
+    @Output() setSelectedStock: EventEmitter<string> = new EventEmitter<string>()
     // private activeStocks: Array<string> = this.stockDataService.getActiveStocks()
     private colors: Array<string> = this.stockDataService.getColors()
-    private selectedStock: string
+    // private selectedStock: string
 
-    onSelect(st: string): void {
-        this.selectedStock = st
-        this.stockDataService.setSelectedStock(st)
+    onSelect(stock: string): void {
+        // this.selectedStock = st
+        // this.stockDataService.setSelectedStock(st)
+        console.log('tabs onselect', stock)
+        this.setSelectedStock.emit(stock)
     }
+    
 
     onDelete(st: string): void {
         if(this.selectedStock == st) {

@@ -24,7 +24,6 @@ export class SearchbarComponent {
         var scv = document.querySelector('input[name=stock-code-value]')
         var searchTerm = scv["value"].toUpperCase()
         if(!searchTerm || searchTerm.trim() === ''){ scv["value"] = '';  return }
-        // this.stockDataService.addActiveStock(searchTerm)
         this.addStock.emit(searchTerm)
         scv["value"] = ''
     }

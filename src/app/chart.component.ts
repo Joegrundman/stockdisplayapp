@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core'
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core'
 import * as d3 from 'd3'
 
 import {StockDataService} from './stock.service'
@@ -29,7 +29,7 @@ export class ChartComponent implements OnInit {
     private dataString: string
     private separatedStockData: Array<any>
     private tooltipData: Array<any>
-    private selectedStock: string = ''
+    @Input() selectedStock: string
     private timestamps: Array<Date>
     private volumes: Array<Number>
     private highs: Array<Number>
@@ -70,11 +70,6 @@ export class ChartComponent implements OnInit {
             let parseTime = d3.timeParse("%Y-%m-%d")
             this.stockData = stockData.map(d => {
                 d.Date = parseTime(d.Date)
-                // delete d.Open
-                // delete d.High
-                // delete d.Low
-                // delete d.Volume
-                // delete d.Adj_Close
                 return d
             })
 
@@ -256,11 +251,12 @@ export class ChartComponent implements OnInit {
     }
 
     setStockWatcher () {
+        var curSelectedStock = ''
         // TODO: replace with angular2 native method
         const stockWatch = setInterval(() => {
             var local = JSON.stringify(this.localActiveStockSymbols)
             var service = JSON.stringify(this.getActiveStocks())
-            var curSelectedStock = this.stockDataService.getSelectedStock()
+
             if(local !== service && !this.stockDataService.getIsLocked()){
                 this.stockDataService.setIsLocked(true)
                 this.setMouseActiveOnChart(true)
@@ -268,11 +264,11 @@ export class ChartComponent implements OnInit {
             }
 
             else if(curSelectedStock !== this.selectedStock) {
-                
-                this.chart.select('.line-' + this.selectedStock)
-                    .attr('class', 'line line-' + this.selectedStock)
 
-                this.selectedStock = curSelectedStock
+                this.chart.select('.line-' + curSelectedStock)
+                    .attr('class', 'line line-' + curSelectedStock)
+
+                curSelectedStock = this.selectedStock
 
                 this.chart.select('.line-' + this.selectedStock)
                     .attr('class', 'line line-' + this.selectedStock + ' line-selected')

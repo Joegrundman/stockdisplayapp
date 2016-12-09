@@ -11,10 +11,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'dist')))
 
-// app.listen(app.get('port'), function() {
-//     console.log('Express server listening on port ' + app.get('port'))
-// })
-
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var onlineUsers = 0;
@@ -39,13 +35,11 @@ io.on('connection', function(socket){
 
     socket.on('deleteStock', function(toDelete) {
         activeStocks = activeStocks.filter(stock => stock != toDelete)
-        console.log('deleting stock', toDelete)
         io.emit('activeStocksUpdate', { activeStocks: activeStocks });
     })
 
     socket.on('addStock', function(toAdd) {
         activeStocks = activeStocks.concat([toAdd])
-        console.log('adding stock', toAdd)
         io.emit('activeStocksUpdate', { activeStocks: activeStocks });        
     })
 });
