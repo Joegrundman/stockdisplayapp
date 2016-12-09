@@ -98,22 +98,11 @@ export class StockDataService {
 
     deleteActiveStock(target: string) : void {
         this.activeStocks = this.activeStocks.filter(stock => stock !== target)
-        // if( this.selectedStock == target ) {
-        //     this.selectedStock = ''
-        // }
     }
 
     getActiveStocks(): Array<string> {
         return this.activeStocks
     }
-
-    // getSelectedStock(): string {
-    //     return this.selectedStock
-    // }
-
-    // setSelectedStock(target: string): void {
-    //     this.selectedStock = target
-    // }
 
     getColors(): Array<string> {
         return this.colors
