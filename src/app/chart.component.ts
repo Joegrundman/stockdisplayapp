@@ -31,9 +31,6 @@ export class ChartComponent implements OnInit {
     private tooltipData: Array<any>
     @Input() selectedStock: string
     @Input() activeStocks: Array<string>
-    // private timestamps: Array<Date>
-    // private volumes: Array<Number>
-    // private highs: Array<Number>
     private chart: any
     private colors: Array<string> = ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     private stockColor: Object = {}
@@ -289,11 +286,8 @@ export class ChartComponent implements OnInit {
 
     ngOnInit(): void {
         this.initGraph()
-        // this.stockDataService.addActiveStock('YHOO')
-        // this.stockDataService.addActiveStock('MSFT')
         this.setMouseActiveOnChart(true)
         this.months = 2
-        // this.getStockData(this.months)
         this.setStockWatcher()
     }
 
