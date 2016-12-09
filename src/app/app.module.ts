@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { ChartComponent } from './chart.component'
 import { StocktabsComponent } from './stocktabs.component'
 import { SearchbarComponent } from './searchbar.component'
-import { StockDataService } from './stock.service'
 
 @NgModule({
   declarations: [
@@ -22,7 +21,7 @@ import { StockDataService } from './stock.service'
     HttpModule,
     JsonpModule
   ],
-  providers: [ StockDataService ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import * as io from 'socket.io-client'
 import *  as d3 from 'd3'
-import {StockDataService} from './stock.service'
-import { environment } from '../environments/environment';
 
 // TODO: host main app state in this component, enabling parent-child info handling if time
-// service should remain more strictly service for api calls
 
 @Component({
     selector: 'app-root',
@@ -13,12 +10,14 @@ import { environment } from '../environments/environment';
     <h1>{{title}}   -  {{onlineUsers}} users online</h1>
     <h3>A stock-price history display using angular2, d3js, websockets, and the yahoo finance api</h3>
     <chart-component 
+        [colors]='colors'
         [activeStocks]='activeStocks'
         [separatedStockData]='separatedStockData'
         [selectedStock]='selectedStock'></chart-component>
     <searchbar-component 
         (addStock)="onAddStock($event)"></searchbar-component>
     <stocktabs-component 
+        [colors]='colors'
         [errorTarget]='errorTarget'
         [selectedStock]='selectedStock'
         (setSelectedStock)="onSetSelectedStock($event)"
@@ -44,6 +43,7 @@ import { environment } from '../environments/environment';
 })
 
 export class AppComponent  {
+    public colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     public errorTarget: string
     public socket: any
     private title = 'Stock Display'
@@ -52,9 +52,6 @@ export class AppComponent  {
     public stockData: Object
     public activeStocks: Array<string> 
     public selectedStock: string = ''
-    private colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
-
-    constructor(private stockDataService: StockDataService){}
 
     onAddStock(stock: string): void {
       if (this.activeStocks.indexOf(stock) > -1) { return }
@@ -99,7 +96,6 @@ export class AppComponent  {
 
     updateActiveStocks(data: any): void {
       this.activeStocks = data.activeStocks
-      this.stockDataService.setActiveStocks(this.activeStocks)
     }
 
     ngOnInit(): void {

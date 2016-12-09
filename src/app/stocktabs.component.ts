@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
-import {StockDataService} from './stock.service'
 
 @Component({
     selector: 'stocktabs-component',
@@ -70,13 +69,12 @@ import {StockDataService} from './stock.service'
 
 export class StocktabsComponent {
 
-    constructor(private stockDataService: StockDataService){}
+    @Input() colors: Array<string>
     @Input() errorTarget: string
     @Input() selectedStock: string
     @Input() activeStocks: Array<string>
     @Output() deleteStock: EventEmitter<string> = new EventEmitter<string>()
     @Output() setSelectedStock: EventEmitter<string> = new EventEmitter<string>()
-    private colors: Array<string> = this.stockDataService.getColors()
 
     onSelect(stock: string): void {
         this.setSelectedStock.emit(stock)

@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core'
 import * as d3 from 'd3'
 
-import {StockDataService} from './stock.service'
-
-
 enum Margin {
     Top = 40,
     Bottom = 60,
@@ -28,11 +25,11 @@ export class ChartComponent implements OnInit {
     private stockData: Array<any>
     private dataString: string
     private tooltipData: Array<any>
+    @Input() colors: Array<string>
     @Input() separatedStockData: Array<any>
     @Input() selectedStock: string
     @Input() activeStocks: Array<string>
     private chart: any
-    private colors: Array<string> = ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     private stockColor: Object = {}
     private overlay: any
     private vertical: any
@@ -46,8 +43,6 @@ export class ChartComponent implements OnInit {
     private months: number
     private mousex: number
     private mousey: number
-
-    constructor(private stockDataService: StockDataService){}
 
     getActiveStocks(): Array<string> {
         return this.activeStocks || []

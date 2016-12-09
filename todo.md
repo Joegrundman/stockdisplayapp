@@ -5,7 +5,7 @@
 
 # YQL api
 - [x] use yql to generate different stock data sets 
-- [ ] error handling for failure to get stock data
+- [x] error handling for failure to get stock data
 - [ ] problem with getting more than two data sets to be solved
 - [ ] use yql to generate different start and end dates
 
