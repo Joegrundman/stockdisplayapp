@@ -9,7 +9,9 @@ import {StockDataService} from './stock.service'
             <div class="stocktab" *ngFor="let stk of activeStocks; let i = index"
                 [class.selected]="stk === selectedStock"
                 (click)="onSelect(stk)"><span [style.color]="colors[i]">{{stk}}</span>   
-                <div class="stockdelbtn"  (click)="onDelete(stk)">x</div>     
+                <div class="stockdelbtn"  (click)="onDelete(stk)">x</div> 
+                <div class="error"
+                *ngIf="stk === errorTarget">Resource Not Found!</div>    
             </div>
         </div>
     </div>`,
@@ -57,6 +59,11 @@ import {StockDataService} from './stock.service'
         .stockdelbtn:hover {
             color: #999;
         }
+        .error {
+            color: #666;
+            font-size: 16px;
+            text-align: center;         
+        }
     `]
 
 })
@@ -64,27 +71,21 @@ import {StockDataService} from './stock.service'
 export class StocktabsComponent {
 
     constructor(private stockDataService: StockDataService){}
+    @Input() errorTarget: string
     @Input() selectedStock: string
     @Input() activeStocks: Array<string>
     @Output() deleteStock: EventEmitter<string> = new EventEmitter<string>()
     @Output() setSelectedStock: EventEmitter<string> = new EventEmitter<string>()
-    // private activeStocks: Array<string> = this.stockDataService.getActiveStocks()
     private colors: Array<string> = this.stockDataService.getColors()
-    // private selectedStock: string
 
     onSelect(stock: string): void {
-        // this.selectedStock = st
-        // this.stockDataService.setSelectedStock(st)
-        console.log('tabs onselect', stock)
         this.setSelectedStock.emit(stock)
-    }
-    
+    }    
 
     onDelete(st: string): void {
         if(this.selectedStock == st) {
             this.selectedStock = null
         }
-        this.deleteStock.emit(st)
-        
+        this.deleteStock.emit(st)       
     }
  }

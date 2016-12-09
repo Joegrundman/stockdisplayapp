@@ -13,11 +13,13 @@ import { environment } from '../environments/environment';
     <h1>{{title}}   -  {{onlineUsers}} users online</h1>
     <h3>A stock-price history display using angular2, d3js, websockets, and the yahoo finance api</h3>
     <chart-component 
-      [activeStocks]='activeStocks'
-      [separatedStockData]='separatedStockData'
-      [selectedStock]='selectedStock'></chart-component>
-    <searchbar-component (addStock)="onAddStock($event)"></searchbar-component>
+        [activeStocks]='activeStocks'
+        [separatedStockData]='separatedStockData'
+        [selectedStock]='selectedStock'></chart-component>
+    <searchbar-component 
+        (addStock)="onAddStock($event)"></searchbar-component>
     <stocktabs-component 
+        [errorTarget]='errorTarget'
         [selectedStock]='selectedStock'
         (setSelectedStock)="onSetSelectedStock($event)"
         [activeStocks]='activeStocks' 
@@ -42,7 +44,7 @@ import { environment } from '../environments/environment';
 })
 
 export class AppComponent  {
-
+    public errorTarget: string
     public socket: any
     private title = 'Stock Display'
     public onlineUsers: number = 0
@@ -78,6 +80,7 @@ export class AppComponent  {
       this.activeStocks.forEach(stock => {
           if(this.stockData[stock].hasOwnProperty('msg') ){
             console.log('this stock was not found', stock)
+            this.errorTarget = stock
           } else {
             tempData.push(this.stockData[stock]
             .map(d => {

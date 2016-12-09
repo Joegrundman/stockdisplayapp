@@ -76,7 +76,11 @@ function getActiveStockData(socketEmitCallback) {
                 }
                 completedPromises++;
             } else {
+                console.log('Not found', symbol)
                 stockData[symbol] = { msg: errorMessage };
+                if (socketEmitCallback) { 
+                    socketEmitCallback() 
+                }
                 completedPromises++;
             }
         })
