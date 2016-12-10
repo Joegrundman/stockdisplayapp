@@ -1,6 +1,22 @@
 # Stockdisplayapp
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.21.
+# angular cli notes below
+
+This app is made with 
+- angular2
+- typescript
+- d3.js
+- socket.io
+- yahoo finance history api
+
+By entering the stock symbol on the display you can get to see 1 year of history data
+Sockets ensure all users see the same selection
+
+app available at 
+
+`rs-stockdisplayapp.herokuapp.com`
+
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

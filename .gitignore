@@ -1,17 +1,17 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output -- comment out dist for heroku
-#/dist
+/dist
 /tmp
 
 # for heroku
-/src
-.editorconfig
-karma.conf.js
-protractor.conf.js
-README.md
-todo.md
-tslint.json
+#/src
+#.editorconfig
+#karma.conf.js
+#protractor.conf.js
+#README.md
+#todo.md
+#tslint.json
 
 # dependencies
 /node_modules
