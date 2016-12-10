@@ -195,7 +195,7 @@ export class ChartComponent implements OnInit {
 
         this.localActiveStockSymbols.forEach((l, i) => {
             this.tooltip.append("text")
-                .attr('class', 'tooltip-text ' + l)
+                .attr('class', 'tooltip-text ' + this.cssEncode(l))
                 .attr("y", (15 * (i + 1)) + 15)
                 .attr("x", 3)
                 .text(l)
@@ -242,7 +242,7 @@ export class ChartComponent implements OnInit {
                     this.separatedStockData.forEach(dataSet => {
                         var datum = this.getDataForDate(dataSet, x0)
                         var stockEntry = datum.Symbol + ': ' + (+datum.Close).toFixed(2)
-                        this.tooltip.select('.tooltip-text.' + datum.Symbol)
+                        this.tooltip.select('.tooltip-text.' + this.cssEncode(datum.Symbol))
                                 .text(stockEntry) 
                     })
                      // update tooltip position
