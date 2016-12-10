@@ -302,6 +302,7 @@ export class ChartComponent implements OnInit {
     ngOnInit(): void {
         this.initGraph()
         this.setStockWatcher()
+        console.log('chart.component.ngOnInit')
         this.getStockDataFromApi.emit(null)
     }
 

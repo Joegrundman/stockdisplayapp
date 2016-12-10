@@ -133,7 +133,7 @@ io.on('connection', function (socket) {
     socket.on('getStocks', function() {
         console.log('getStocks received')
         io.emit('activeStocksUpdate', { activeStocks: activeStocks })
-        getActiveStockData(socketEmitCallback)
+        io.emit('stockData', { stockData: stockData })
     })
 });
 
