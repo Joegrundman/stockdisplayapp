@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core'
+import { Component, OnInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core'
 import * as d3 from 'd3'
 
 enum Margin {
@@ -65,7 +65,8 @@ export class ChartComponent implements OnInit {
     @Input() activeStocks: Array<string>
     @Input() colors: Array<string>
     @Input() selectedStock: string
-    @Input() separatedStockData: Array<any>  
+    @Input() separatedStockData: Array<any> 
+    @Output() getStockDataFromApi: EventEmitter<null> =  new EventEmitter<null>()
     private mouseActiveOnChart: boolean 
     private stockData: Array<any>
     private tooltipData: Array<any>
@@ -80,7 +81,6 @@ export class ChartComponent implements OnInit {
     private height: number
     private tooltip: any
     private localActiveStockSymbols: Array<string> 
-    private months: number
     private mousex: number
     private mousey: number
 
@@ -88,23 +88,20 @@ export class ChartComponent implements OnInit {
         return this.activeStocks || []
     }
 
-    getStockData(months: number): void {
+    getStockData(): void {
         this.localActiveStockSymbols = this.getActiveStocks().slice()
         if(!this.localActiveStockSymbols.length){
             console.log('no stocks to show')
             this.separatedStockData = []
-            this.renderGraph()
             return
         }
 
         this.localActiveStockSymbols.forEach((stockName, i) => {
             this.stockColor[stockName] = this.colors[i]
         })
-
+        console.log('number of datasets', this.separatedStockData.length)
         // needed to have a concatanated file to find the full range of values
         this.stockData = this.separatedStockData.reduce((a,b) => a.concat(b))
-
-        this.renderGraph()
 
     }
 
@@ -130,9 +127,6 @@ export class ChartComponent implements OnInit {
                  .attr("width", this.width.toString() + 'px')
                  .attr("height", this.height.toString() + 'px')
                  .style('background', '#fafafa')
-
-        // this.bisectDate = d3.bisector(d => d['Date']).left
-
     }
 
     renderGraph() {
@@ -174,7 +168,6 @@ export class ChartComponent implements OnInit {
                 .attr("dx", Margin.Bottom / 2)
                 .style("text-anchor", "end")
                 .text("Closing Price ($)")
-
 
         this.chart.append("g")
             .attr("class", "axis axis--x")
@@ -270,17 +263,18 @@ export class ChartComponent implements OnInit {
     }
 
     setStockWatcher () {
-        var curSelectedStock = ''
-        var curData = {}
-        // TODO: replace with angular2 native method
+        let curSelectedStock: string = ''
+        let curDataString: string = '[]'
+        // TODO: replace with angular2 native method if available
 
         const stockWatch = setInterval(() => {
-
-            if( curData != this.separatedStockData) {
-                console.log("updating")
+            var stringifiedData = JSON.stringify(this.separatedStockData)
+            if( curDataString != stringifiedData) {
+                console.log("chart.component stockWatcher: updating stockdata")
+                curDataString = stringifiedData
                 this.setMouseActiveOnChart(true)
-                curData = this.separatedStockData
-                this.getStockData(this.months)
+                this.getStockData()
+                this.renderGraph()
             }
 
             else if(curSelectedStock !== this.selectedStock) {
@@ -306,9 +300,8 @@ export class ChartComponent implements OnInit {
 
     ngOnInit(): void {
         this.initGraph()
-        this.setMouseActiveOnChart(true)
-        this.months = 2
         this.setStockWatcher()
+        this.getStockDataFromApi.emit(null)
     }
 
 }

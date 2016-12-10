@@ -21,7 +21,7 @@ var activeStocks = ['YHOO', 'MSFT', 'FB'];
 var stockData = {};
 var completedPromises = 0;
 var dates;
-var monthsToSearch = 3
+var monthsToSearch = 12
 
 var errorMessage = "No results!"
 
@@ -98,6 +98,7 @@ io.on('connection', function (socket) {
     io.emit('activeStocksUpdate', { activeStocks: activeStocks });
 
     if (completedPromises == activeStocks.length) {
+        console.log('sending Data')
         io.emit('stockData', { stockData: stockData });
         completedPromises = 0;
     }
@@ -126,6 +127,13 @@ io.on('connection', function (socket) {
         var socketEmitCallback = () =>  io.emit('stockData', { stockData: stockData });
         getActiveStockData(socketEmitCallback)
 
+    })
+
+    socket.on('getStocks', function() {
+        console.log('getStocks received')
+        io.emit('activeStocksUpdate', { activeStocks: activeStocks })
+        var socketEmitCallback = () =>  io.emit('stockData', { stockData: stockData });
+        getActiveStockData(socketEmitCallback)
     })
 });
 

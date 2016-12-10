@@ -13,6 +13,7 @@ import *  as d3 from 'd3'
         [colors]='colors'
         [activeStocks]='activeStocks'
         [separatedStockData]='separatedStockData'
+        (getStockDataFromApi)="getStockDataFromApi($event)"
         [selectedStock]='selectedStock'></chart-component>
     <searchbar-component 
         (addStock)="onAddStock($event)"></searchbar-component>
@@ -52,6 +53,10 @@ export class AppComponent  {
     public stockData: Object
     public activeStocks: Array<string> 
     public selectedStock: string = ''
+
+    getStockDataFromApi(): void {
+      this.socket.emit('getStocks')
+    }
 
     onAddStock(stock: string): void {
       if (this.activeStocks.indexOf(stock) > -1) { return }
