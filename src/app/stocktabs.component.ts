@@ -9,8 +9,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core'
                 [class.selected]="stk === selectedStock"
                 (click)="onSelect(stk)"><span [style.color]="colors[i]">{{stk}}</span>   
                 <div class="stockdelbtn"  (click)="onDelete(stk)">x</div> 
-                <div class="error"
-                *ngIf="stk === errorTarget">Resource Not Found!</div>    
+                <div class="error"   
+                *ngIf="hasError.indexOf(stk) > -1">Resource Not Found!</div>    
             </div>
         </div>
     </div>`,
@@ -70,7 +70,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core'
 export class StocktabsComponent {
 
     @Input() colors: Array<string>
-    @Input() errorTarget: string
+    @Input() hasError: Array<string>
     @Input() selectedStock: string
     @Input() activeStocks: Array<string>
     @Output() deleteStock: EventEmitter<string> = new EventEmitter<string>()

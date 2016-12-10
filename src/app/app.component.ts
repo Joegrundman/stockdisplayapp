@@ -18,7 +18,7 @@ import *  as d3 from 'd3'
         (addStock)="onAddStock($event)"></searchbar-component>
     <stocktabs-component 
         [colors]='colors'
-        [errorTarget]='errorTarget'
+        [hasError]='hasError'
         [selectedStock]='selectedStock'
         (setSelectedStock)="onSetSelectedStock($event)"
         [activeStocks]='activeStocks' 
@@ -44,7 +44,7 @@ import *  as d3 from 'd3'
 
 export class AppComponent  {
     public colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
-    public errorTarget: string
+    public hasError: Array<string> = []
     public socket: any
     private title = 'Stock Display'
     public onlineUsers: number = 0
@@ -77,7 +77,7 @@ export class AppComponent  {
       this.activeStocks.forEach(stock => {
           if(this.stockData[stock].hasOwnProperty('msg') ){
             console.log('this stock was not found', stock)
-            this.errorTarget = stock
+            this.hasError = [...this.hasError, stock]
           } else {
             tempData.push(this.stockData[stock]
             .map(d => {
