@@ -120,11 +120,12 @@ io.on('connection', function (socket) {
         io.emit('stockData', { stockData: stockData})
     })
 
+    var socketEmitCallback = () =>  io.emit('stockData', { stockData: stockData });
+
     socket.on('addStock', function (toAdd) {
         console.log('addstock', toAdd)
         activeStocks = activeStocks.concat([toAdd])
         io.emit('activeStocksUpdate', { activeStocks: activeStocks });
-        var socketEmitCallback = () =>  io.emit('stockData', { stockData: stockData });
         getActiveStockData(socketEmitCallback)
 
     })
@@ -132,7 +133,6 @@ io.on('connection', function (socket) {
     socket.on('getStocks', function() {
         console.log('getStocks received')
         io.emit('activeStocksUpdate', { activeStocks: activeStocks })
-        var socketEmitCallback = () =>  io.emit('stockData', { stockData: stockData });
         getActiveStockData(socketEmitCallback)
     })
 });

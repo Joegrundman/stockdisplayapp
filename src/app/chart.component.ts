@@ -84,6 +84,8 @@ export class ChartComponent implements OnInit {
     private mousex: number
     private mousey: number
 
+    private cssEncode = (str: string) : string => str.replace('\.', '__DOT__')
+
     getActiveStocks(): Array<string> {
         return this.activeStocks || []
     }
@@ -148,7 +150,7 @@ export class ChartComponent implements OnInit {
         this.separatedStockData.forEach(dataSet => {
             this.chart.append("path")
             .datum(dataSet)
-            .attr("class", "line line-" + dataSet[0].Symbol)
+            .attr("class", "line line-" + this.cssEncode(dataSet[0].Symbol))
             .style("fill", "none")
             .style("stroke", d => this.stockColor[d[0].Symbol])
             .attr("d", this.valueLine)
@@ -270,7 +272,6 @@ export class ChartComponent implements OnInit {
         const stockWatch = setInterval(() => {
             var stringifiedData = JSON.stringify(this.separatedStockData)
             if( curDataString != stringifiedData) {
-                console.log("chart.component stockWatcher: updating stockdata")
                 curDataString = stringifiedData
                 this.setMouseActiveOnChart(true)
                 this.getStockData()
@@ -279,13 +280,13 @@ export class ChartComponent implements OnInit {
 
             else if(curSelectedStock !== this.selectedStock) {
 
-                this.chart.select('.line-' + curSelectedStock)
-                    .attr('class', 'line line-' + curSelectedStock)
+                this.chart.select('.line-' + this.cssEncode(curSelectedStock))
+                    .attr('class', 'line line-' + this.cssEncode(curSelectedStock))
 
                 curSelectedStock = this.selectedStock
 
-                this.chart.select('.line-' + this.selectedStock)
-                    .attr('class', 'line line-' + this.selectedStock + ' line-selected')
+                this.chart.select('.line-' + this.cssEncode(curSelectedStock))
+                    .attr('class', 'line line-' + this.cssEncode(curSelectedStock) + ' line-selected')
             }
         }, 300)
     }

@@ -64,7 +64,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core'
             text-align: center;         
         }
     `]
-
 })
 
 export class StocktabsComponent {
