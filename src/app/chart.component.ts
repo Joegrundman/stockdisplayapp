@@ -16,19 +16,59 @@ enum Margin {
             <svg id="chart-svg"></svg>
         </div>
     `,
-    styleUrls: ['./chart.component.css']
+    styles: [`
+    .chart-display {
+        margin: 0 auto;
+    }
+
+    #chart-svg {
+        display: block;
+        margin: 0 auto;
+        /*border: 1px solid #888;*/
+        box-shadow: 2px 2px 6px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .tooltip {	
+        position: absolute;			
+        text-align: center;	
+        left: 100px;
+        top: 100px;		
+        width: 65px;					
+        height: 28px;					
+        padding: 2px;				
+        font: 12px sans-serif;		
+        background: lightsteelblue;	
+        border: 0px;		
+        border-radius: 8px;			
+        pointer-events: none;			
+    }
+
+    .tooltip-rect {
+        fill: steelblue;
+    }
+
+    .tooltip-text {
+        fill: white;
+        font-size: 10px;
+    }
+
+    .line {
+        stroke-width: 1.5px;
+    }
+
+    .line-selected {
+        stroke-width: 3px;
+    }`]
 })
 
 export class ChartComponent implements OnInit {
-    private bisectDate:any
+    @Input() activeStocks: Array<string>
+    @Input() colors: Array<string>
+    @Input() selectedStock: string
+    @Input() separatedStockData: Array<any>  
     private mouseActiveOnChart: boolean 
     private stockData: Array<any>
-    private dataString: string
     private tooltipData: Array<any>
-    @Input() colors: Array<string>
-    @Input() separatedStockData: Array<any>
-    @Input() selectedStock: string
-    @Input() activeStocks: Array<string>
     private chart: any
     private stockColor: Object = {}
     private overlay: any
@@ -57,24 +97,23 @@ export class ChartComponent implements OnInit {
             return
         }
 
-            this.localActiveStockSymbols.forEach((stockName, i) => {
-                this.stockColor[stockName] = this.colors[i]
-            })
+        this.localActiveStockSymbols.forEach((stockName, i) => {
+            this.stockColor[stockName] = this.colors[i]
+        })
 
+        // needed to have a concatanated file to find the full range of values
         this.stockData = this.separatedStockData.reduce((a,b) => a.concat(b))
-        console.log('stocks to show', this.separatedStockData)
-        console.log("the number of different stock data sets is", this.separatedStockData.length)
 
         this.renderGraph()
 
     }
 
     getDataForDate(dataSet, x0) {
-        var x0Object = new Date(x0)
+        var x0Point = new Date(x0)
 
         for(var i = dataSet.length - 1; i >= 0; i--) {
             var date = new Date(dataSet[i]['Date'])
-            if (date > x0Object) {
+            if (date > x0Point) {
                 return dataSet[i + 1] || dataSet[i]
             }
         }
@@ -92,7 +131,7 @@ export class ChartComponent implements OnInit {
                  .attr("height", this.height.toString() + 'px')
                  .style('background', '#fafafa')
 
-        this.bisectDate = d3.bisector(d => d['Date']).left
+        // this.bisectDate = d3.bisector(d => d['Date']).left
 
     }
 
@@ -111,8 +150,6 @@ export class ChartComponent implements OnInit {
         this.valueLine = d3.line()
             .x(d => this.xRange(d['Date']))
             .y(d => this.yRange(d['Close']))
-
-
 
         this.separatedStockData.forEach(dataSet => {
             this.chart.append("path")
