@@ -1,7 +1,5 @@
 import {Component, Output, EventEmitter} from '@angular/core'
 
-// import { StockDataService } from './stock.service'
-
 @Component({
     selector: 'searchbar-component',
     template: `
@@ -15,8 +13,6 @@ import {Component, Output, EventEmitter} from '@angular/core'
 })
 
 export class SearchbarComponent {
-
-    // constructor(private stockDataService: StockDataService) { }
     
     @Output() addStock: EventEmitter<string> = new EventEmitter<string>()
 
