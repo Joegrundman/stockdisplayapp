@@ -66,6 +66,7 @@ export class AppComponent  {
 
     onDeleteStock(stock: string): void {
         this.activeStocks = this.activeStocks.filter(s => s != stock)
+        this.selectedStock = ''
         this.socket.emit('deleteStock', stock)
     }
 

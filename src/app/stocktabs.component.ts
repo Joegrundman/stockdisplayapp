@@ -80,9 +80,6 @@ export class StocktabsComponent {
     }    
 
     onDelete(st: string): void {
-        if(this.selectedStock == st) {
-            this.selectedStock = null
-        }
         this.deleteStock.emit(st)       
     }
  }

@@ -5,7 +5,7 @@
 /tmp
 
 # for heroku
-#/src
+/src
 #.editorconfig
 #karma.conf.js
 #protractor.conf.js

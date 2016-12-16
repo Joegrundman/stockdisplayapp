@@ -39932,6 +39932,7 @@ var AppComponent = (function () {
     };
     AppComponent.prototype.onDeleteStock = function (stock) {
         this.activeStocks = this.activeStocks.filter(function (s) { return s != stock; });
+        this.selectedStock = '';
         this.socket.emit('deleteStock', stock);
     };
     AppComponent.prototype.onSetSelectedStock = function (stock) {
@@ -71079,7 +71080,8 @@ var ChartComponent = (function () {
         this.tooltip.append("rect")
             .attr("class", "tooltip-rect")
             .attr("width", '70px')
-            .attr("height", '100px')
+            .attr("height", this.activeStocks.length > 5 ?
+            (100 + ((this.activeStocks.length - 5) * 15)) + 'px' : '100px')
             .attr("ry", '10')
             .attr("rx", '10');
         var tooltipText = this.tooltip.append("text")
@@ -71305,9 +71307,6 @@ var StocktabsComponent = (function () {
         this.setSelectedStock.emit(stock);
     };
     StocktabsComponent.prototype.onDelete = function (st) {
-        if (this.selectedStock == st) {
-            this.selectedStock = null;
-        }
         this.deleteStock.emit(st);
     };
     __decorate([
