@@ -47,7 +47,7 @@ export class AppComponent  {
     public colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     public hasError: Array<string> = []
     public socket: any
-    private title = 'Stock Display'
+    private title: string = 'Stock Display'
     public onlineUsers: number = 0
     public separatedStockData: Array<Object> = []
     public stockData: Object
