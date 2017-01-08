@@ -39918,6 +39918,7 @@ var AppComponent = (function () {
         this.title = 'Stock Display';
         this.onlineUsers = 0;
         this.separatedStockData = [];
+        this.stockNames = {};
         this.selectedStock = '';
     }
     AppComponent.prototype.getStockDataFromApi = function () {
@@ -39960,6 +39961,10 @@ var AppComponent = (function () {
         });
         this.separatedStockData = tempData;
     };
+    AppComponent.prototype.setStockNames = function (data) {
+        console.log('receiving stockNames');
+        this.stockNames = data.stockNames;
+    };
     AppComponent.prototype.setOnlineUsers = function (data) {
         this.onlineUsers = data.onlineUsers;
     };
@@ -39972,11 +39977,12 @@ var AppComponent = (function () {
         this.socket.on('onlineUsers', function (data) { return _this.setOnlineUsers(data); });
         this.socket.on('activeStocksUpdate', function (data) { return _this.updateActiveStocks(data); });
         this.socket.on('stockData', function (data) { return _this.setStockData(data); });
+        this.socket.on('stockNames', function (data) { return _this.setStockNames(data); });
     };
     AppComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["G" /* Component */])({
             selector: 'app-root',
-            template: "\n    <h1>{{title}}   -  {{onlineUsers}} users online</h1>\n    <h3>A stock-price history display using angular2, d3js, websockets, and the yahoo finance api</h3>\n    <chart-component \n        [colors]='colors'\n        [activeStocks]='activeStocks'\n        [separatedStockData]='separatedStockData'\n        (getStockDataFromApi)=\"getStockDataFromApi($event)\"\n        [selectedStock]='selectedStock'></chart-component>\n    <searchbar-component \n        (addStock)=\"onAddStock($event)\"></searchbar-component>\n    <stocktabs-component \n        [colors]='colors'\n        [hasError]='hasError'\n        [selectedStock]='selectedStock'\n        (setSelectedStock)=\"onSetSelectedStock($event)\"\n        [activeStocks]='activeStocks' \n        (deleteStock)=\"onDeleteStock($event)\"></stocktabs-component>\n    ",
+            template: "\n    <h1>{{title}}   -  {{onlineUsers}} users online</h1>\n    <h3>A stock-price history display using angular2, d3js, websockets, and the yahoo finance api</h3>\n    <chart-component \n        [colors]='colors'\n        [activeStocks]='activeStocks'\n        [separatedStockData]='separatedStockData'\n        (getStockDataFromApi)=\"getStockDataFromApi($event)\"\n        [selectedStock]='selectedStock'></chart-component>\n    <searchbar-component \n        (addStock)=\"onAddStock($event)\"></searchbar-component>\n    <stocktabs-component \n        [colors]='colors'\n        [hasError]='hasError'\n        [selectedStock]='selectedStock'\n        (setSelectedStock)=\"onSetSelectedStock($event)\"\n        [activeStocks]='activeStocks' \n        [stockNames]='stockNames'\n        (deleteStock)=\"onDeleteStock($event)\"></stocktabs-component>\n    ",
             styles: ["\n    h1 {\n      color: steelblue;\n      margin-top: 0.5em; \n      font-family: Arial, Helvetica, sans-serif;\n      text-align: center;\n      font-size: 150%;\n    }\n\n    h2, h3 {\n      color: #666;\n      font-family: Arial, Helvetica, sans-serif;\n      font-weight: lighter;\n      text-align: center;\n    }\n"]
         }), 
         __metadata('design:paramtypes', [])
@@ -71324,6 +71330,10 @@ var StocktabsComponent = (function () {
     __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Input */])(), 
         __metadata('design:type', Object)
+    ], StocktabsComponent.prototype, "stockNames", void 0);
+    __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Input */])(), 
+        __metadata('design:type', Object)
     ], StocktabsComponent.prototype, "activeStocks", void 0);
     __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Output */])(), 
@@ -71336,8 +71346,8 @@ var StocktabsComponent = (function () {
     StocktabsComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["G" /* Component */])({
             selector: 'stocktabs-component',
-            template: "\n    <div class=\"stockholder\">\n        <div class=\"stocktabs\">\n            <div class=\"stocktab\" *ngFor=\"let stk of activeStocks; let i = index\"\n                [class.selected]=\"stk === selectedStock\"\n                (click)=\"onSelect(stk)\"><span [style.color]=\"colors[i]\">{{stk}}</span>   \n                <div class=\"stockdelbtn\"  (click)=\"onDelete(stk)\">x</div> \n                <div class=\"error\"   \n                *ngIf=\"hasError.indexOf(stk) > -1\">Resource Not Found!</div>    \n            </div>\n        </div>\n    </div>",
-            styles: ["\n        .stockholder {\n            width: 100%;\n            margin-top: 0.5em;\n            border-radius: 5px;\n        }\n        .stocktabs {\n            display: flex;\n            flex-direction: row;\n            list-style-type: none;\n        }\n        .selected {\n            background-color: #dcdde9 !important;\n            color: white;\n        }\n        .stocktab {\n            cursor: pointer;\n            position: relative;\n            left: 0;\n            background-color: #fafafa;\n            text-align: center;\n            font-size: 24px;\n            font-weight: bold;\n            color: #666;\n            margin: .5em;\n            width: 14em;\n            padding: .3em;\n            height: 3em;\n            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);\n        }\n        .stocktab:hover {\n            box-shadow: 1px 1px 4px rgba(0,0,0,0.2);\n            background-color: #f6f6f6;\n        }\n        .stockdelbtn {\n            position: absolute;\n            right: 6px;\n            top: 2px;\n            font-size: 20px;\n            color: #ccc;\n        }\n        .stockdelbtn:hover {\n            color: #999;\n        }\n        .error {\n            color: #666;\n            font-size: 16px;\n            text-align: center;         \n        }\n    "]
+            template: "\n    <div class=\"stockholder\">\n        <div class=\"stocktabs\">\n            <div class=\"stocktab\" *ngFor=\"let stk of activeStocks; let i = index\"\n                [class.selected]=\"stk === selectedStock\"\n                (click)=\"onSelect(stk)\"><span [style.color]=\"colors[i]\">{{stk}}</span>   \n                <div class=\"stockdelbtn\"  (click)=\"onDelete(stk)\">x</div> \n                <div class=\"stockName\" *ngIf=\"stockNames[stk]\">\n                    {{stockNames[stk]}}\n                </div>\n                <div class=\"error\"   \n                *ngIf=\"hasError.indexOf(stk) > -1\">Resource Not Found!</div>    \n            </div>\n        </div>\n    </div>",
+            styles: ["\n        .stockholder {\n            width: 100%;\n            margin-top: 0.5em;\n            border-radius: 5px;\n        }\n        .stocktabs {\n            display: flex;\n            flex-direction: row;\n            list-style-type: none;\n        }\n        .selected {\n            background-color: #dcdde9 !important;\n            color: white;\n        }\n        .stocktab {\n            cursor: pointer;\n            position: relative;\n            left: 0;\n            background-color: #fafafa;\n            text-align: center;\n            font-size: 24px;\n            font-weight: bold;\n            color: #666;\n            margin: .5em;\n            width: 14em;\n            padding: .3em;\n            height: 3em;\n            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);\n        }\n        .stocktab:hover {\n            box-shadow: 1px 1px 4px rgba(0,0,0,0.2);\n            background-color: #f6f6f6;\n        }\n        .stockdelbtn {\n            position: absolute;\n            right: 6px;\n            top: 2px;\n            font-size: 20px;\n            color: #ccc;\n        }\n        .stockdelbtn:hover {\n            color: #999;\n        }\n        .error {\n            color: #666;\n            font-size: 16px;\n            text-align: center;         \n        }\n        .stockName {\n            color: #666;\n            font-size: 14px;\n            text-align: center;\n        }\n    "]
         }), 
         __metadata('design:paramtypes', [])
     ], StocktabsComponent);

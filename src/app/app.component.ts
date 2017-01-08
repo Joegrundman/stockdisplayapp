@@ -23,6 +23,7 @@ import *  as d3 from 'd3'
         [selectedStock]='selectedStock'
         (setSelectedStock)="onSetSelectedStock($event)"
         [activeStocks]='activeStocks' 
+        [stockNames]='stockNames'
         (deleteStock)="onDeleteStock($event)"></stocktabs-component>
     `,
     styles: [`
@@ -51,6 +52,7 @@ export class AppComponent  {
     public onlineUsers: number = 0
     public separatedStockData: Array<Object> = []
     public stockData: Object
+    public stockNames: Object = {}
     public activeStocks: Array<string> 
     public selectedStock: string = ''
 
@@ -96,6 +98,11 @@ export class AppComponent  {
       this.separatedStockData = tempData
     }
 
+    setStockNames(data: any) :void {
+      console.log('receiving stockNames')
+      this.stockNames = data.stockNames
+    }
+
     setOnlineUsers(data: any): void {
       this.onlineUsers = data.onlineUsers
     }
@@ -110,6 +117,7 @@ export class AppComponent  {
         this.socket.on('onlineUsers', data => this.setOnlineUsers(data))
         this.socket.on('activeStocksUpdate', data => this.updateActiveStocks(data))
         this.socket.on('stockData', data => this.setStockData(data))
+        this.socket.on('stockNames', data => this.setStockNames(data))
 
     }
 }
