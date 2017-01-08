@@ -39910,7 +39910,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-// TODO: host main app state in this component, enabling parent-child info handling if time
+// TODO: host main app state in this component
 var AppComponent = (function () {
     function AppComponent() {
         this.colors = ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal'];
@@ -39962,7 +39962,6 @@ var AppComponent = (function () {
         this.separatedStockData = tempData;
     };
     AppComponent.prototype.setStockNames = function (data) {
-        console.log('receiving stockNames');
         this.stockNames = data.stockNames;
     };
     AppComponent.prototype.setOnlineUsers = function (data) {

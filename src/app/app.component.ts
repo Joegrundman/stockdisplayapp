@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import * as io from 'socket.io-client'
 import *  as d3 from 'd3'
 
-// TODO: host main app state in this component, enabling parent-child info handling if time
+// TODO: host main app state in this component
 
 @Component({
     selector: 'app-root',
@@ -44,7 +44,7 @@ import *  as d3 from 'd3'
 `]
 })
 
-export class AppComponent  {
+export class AppComponent implements OnInit {
     public colors: Array<string> =  ['steelblue', 'darkorange', 'darkred', 'red', 'darkgreen', 'goldenrod', 'darkslategrey', 'darkmagenta', 'teal']
     public hasError: Array<string> = []
     public socket: any
@@ -99,7 +99,6 @@ export class AppComponent  {
     }
 
     setStockNames(data: any) :void {
-      console.log('receiving stockNames')
       this.stockNames = data.stockNames
     }
 
