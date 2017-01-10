@@ -6,7 +6,7 @@ import {Component, Output, EventEmitter} from '@angular/core'
     <div class="searchbar"> 
     Enter the stock symbol here (e.g. GOOG, FB, GE, TSCO.L, AAPL):  
     <input class="searchbar-input" name="stock-code-value" value="" placeholder="stock symbol">
-    <button class="searchbar-button" (click)="onClick()">Search!</button>
+    <button class="searchbar-button" (click)="onClick()">Add Symbol</button>
     </div>
     `,
     styles: [ `

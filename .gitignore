@@ -4,7 +4,7 @@
 /dist
 /tmp
 
-# for heroku
+# uncomment for heroku
 #/src
 #.editorconfig
 #karma.conf.js
